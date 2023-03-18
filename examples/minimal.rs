@@ -23,6 +23,6 @@ fn setup(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
 }
 
 fn spawn_cube(transform: Transform, world: &mut World) {
-    info!("Spawning cube at {:?}", transform.translation);
+    info!("Spawning cube at {}", transform.translation);
     world.spawn((Name::new("Cube"), transform));
 }

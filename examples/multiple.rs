@@ -37,16 +37,16 @@ fn setup(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
 }
 
 fn spawn_cube(transform: Transform, world: &mut World) {
-    info!("Spawning cube at {:?}", transform.translation);
+    info!("Spawning cube at {}", transform.translation);
     world.spawn((Name::new("Cube"), transform));
 }
 
 fn spawn_triangle(transform: Transform, world: &mut World) {
-    info!("Spawning triangle at {:?}", transform.translation);
+    info!("Spawning triangle at {}", transform.translation);
     world.spawn((Name::new("Triangle"), transform));
 }
 
 fn spawn_sphere(transform: Transform, world: &mut World) {
-    info!("Spawning sphere at {:?}", transform.translation);
+    info!("Spawning sphere at {}", transform.translation);
     world.spawn((Name::new("Sphere"), transform));
 }
