@@ -11,11 +11,11 @@ pub mod prelude {
 }
 
 #[derive(Debug)]
-pub struct SpewPlugin<T: Send + 'static + Eq + Sync> {
+pub struct SpewPlugin<T: Eq + Send + Sync + 'static> {
     spawner_enum_type: std::marker::PhantomData<T>,
 }
 
-impl<T: Send + 'static + Eq + Sync> Default for SpewPlugin<T> {
+impl<T: Eq + Send + Sync + 'static> Default for SpewPlugin<T> {
     fn default() -> Self {
         Self {
             spawner_enum_type: std::marker::PhantomData,
@@ -23,27 +23,27 @@ impl<T: Send + 'static + Eq + Sync> Default for SpewPlugin<T> {
     }
 }
 
-impl<T: Send + 'static + Eq + Sync> Plugin for SpewPlugin<T> {
+impl<T: Eq + Send + Sync + 'static> Plugin for SpewPlugin<T> {
     fn build(&self, app: &mut App) {
         app.add_event::<SpawnEvent<T>>();
     }
 }
 
 pub trait SpewApp {
-    fn add_spawner<T: Send + 'static + Eq + Sync>(
+    fn add_spawner<T: Eq + Send + Sync + 'static>(
         &mut self,
         key: T,
-        spawner: impl FnMut(Transform, &mut World) + 'static + Send + Sync,
+        spawner: impl FnMut(Transform, &mut World) + Send + Sync + 'static,
     ) -> &mut App;
 }
 
-pub struct SpawnEvent<T: Send + 'static + Eq + Sync> {
+pub struct SpawnEvent<T: Eq + Send + Sync + 'static> {
     pub object: T,
     pub transform: Transform,
 }
 
 impl SpewApp for App {
-    fn add_spawner<T: Send + 'static + Eq + Sync>(
+    fn add_spawner<T: Eq + Send + Sync + 'static>(
         &mut self,
         key: T,
         mut spawner: impl FnMut(Transform, &mut World) + 'static + Send + Sync,
