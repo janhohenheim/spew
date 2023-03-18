@@ -29,25 +29,30 @@ impl<T: Eq + Send + Sync + 'static> Plugin for SpewPlugin<T> {
     }
 }
 
-pub trait SpewApp {
-    fn add_spawner<T: Eq + Send + Sync + 'static>(
-        &mut self,
-        key: T,
-        spawner: impl FnMut(Transform, &mut World) + Send + Sync + 'static,
-    ) -> &mut App;
-}
-
 pub struct SpawnEvent<T: Eq + Send + Sync + 'static> {
     pub object: T,
     pub transform: Transform,
 }
 
+pub trait SpewApp {
+    fn add_spawners<T: Spawners>(&mut self, spawners: T) -> &mut App;
+}
+
 impl SpewApp for App {
-    fn add_spawner<T: Eq + Send + Sync + 'static>(
-        &mut self,
-        key: T,
-        mut spawner: impl FnMut(Transform, &mut World) + 'static + Send + Sync,
-    ) -> &mut App {
+    fn add_spawners<T: Spawners>(&mut self, spawners: T) -> &mut App {
+        spawners.add_to_app(self)
+    }
+}
+
+pub trait Spawners {
+    fn add_to_app(self, app: &mut App) -> &mut App;
+}
+
+impl<T: Eq + Send + Sync + 'static, F: FnMut(Transform, &mut World) + 'static + Send + Sync>
+    Spawners for (T, F)
+{
+    fn add_to_app(self, app: &mut App) -> &mut App {
+        let (key, mut spawner) = self;
         let system = move |world: &mut World| {
             let mut event_system_state = SystemState::<EventReader<SpawnEvent<T>>>::new(world);
             let mut events = event_system_state.get_mut(world);
@@ -60,7 +65,7 @@ impl SpewApp for App {
                 spawner(transform, world);
             }
         };
-        self.add_system(system);
-        self
+        app.add_system(system);
+        app
     }
 }
