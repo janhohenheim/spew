@@ -1,5 +1,6 @@
 use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
-use crate::spawner::{Spawner, Spawners};
+use crate::spawner::{CachedSystemState, Spawner, Spawners};
+use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 
 #[derive(Debug)]
@@ -20,6 +21,10 @@ impl<T: Eq + Clone + Send + Sync + 'static> Plugin for SpewPlugin<T> {
         app.add_event::<SpawnEvent<T>>()
             .add_event::<DelayedSpawnEvent<T>>()
             .add_system(delay_spawn_events::<T>);
+        let world = &mut app.world;
+
+        let initial_state: SystemState<EventReader<SpawnEvent<T>>> = SystemState::new(world);
+        world.insert_resource(CachedSystemState(initial_state));
     }
 
     fn is_unique(&self) -> bool {

@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct SpawnEvent<T: Eq + Clone + Send + Sync + 'static> {
     pub object: T,
     pub transform: Transform,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct DelayedSpawnEvent<T: Eq + Clone + Send + Sync + 'static> {
     pub spawn_event: SpawnEvent<T>,
     pub delay: usize,
