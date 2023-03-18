@@ -7,7 +7,7 @@ use bevy::prelude::*;
 
 /// Everything you need to get started
 pub mod prelude {
-    pub use crate::SpewPlugin;
+    pub use crate::{SpawnEvent, SpewApp, SpewPlugin};
 }
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ pub struct SpewPlugin<T: Send + 'static + Eq + Sync> {
     spawner_enum_type: std::marker::PhantomData<T>,
 }
 
-impl Default for SpewPlugin<()> {
+impl<T: Send + 'static + Eq + Sync> Default for SpewPlugin<T> {
     fn default() -> Self {
         Self {
             spawner_enum_type: std::marker::PhantomData,
@@ -34,12 +34,12 @@ pub trait SpewApp {
         &mut self,
         key: T,
         spawner: impl FnMut(Transform, &mut World) + 'static + Send + Sync,
-    );
+    ) -> &mut App;
 }
 
 pub struct SpawnEvent<T: Send + 'static + Eq + Sync> {
-    object: T,
-    transform: Transform,
+    pub object: T,
+    pub transform: Transform,
 }
 
 impl SpewApp for App {
@@ -47,7 +47,7 @@ impl SpewApp for App {
         &mut self,
         key: T,
         mut spawner: impl FnMut(Transform, &mut World) + 'static + Send + Sync,
-    ) {
+    ) -> &mut App {
         let system = move |world: &mut World| {
             let mut event_system_state = SystemState::<EventReader<SpawnEvent<T>>>::new(world);
             let mut events = event_system_state.get_mut(world);
@@ -61,5 +61,6 @@ impl SpewApp for App {
             }
         };
         self.add_system(system);
+        self
     }
 }
