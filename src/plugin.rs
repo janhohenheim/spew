@@ -1,13 +1,13 @@
-use crate::events::SpawnEvent;
+use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
 use crate::spawner::{Spawner, Spawners};
 use bevy::prelude::*;
 
 #[derive(Debug)]
-pub struct SpewPlugin<T: Eq + Send + Sync + 'static> {
+pub struct SpewPlugin<T: Eq + Clone + Send + Sync + 'static> {
     spawner_enum_type: std::marker::PhantomData<T>,
 }
 
-impl<T: Eq + Send + Sync + 'static> Default for SpewPlugin<T> {
+impl<T: Eq + Clone + Send + Sync + 'static> Default for SpewPlugin<T> {
     fn default() -> Self {
         Self {
             spawner_enum_type: std::marker::PhantomData,
@@ -15,9 +15,15 @@ impl<T: Eq + Send + Sync + 'static> Default for SpewPlugin<T> {
     }
 }
 
-impl<T: Eq + Send + Sync + 'static> Plugin for SpewPlugin<T> {
+impl<T: Eq + Clone + Send + Sync + 'static> Plugin for SpewPlugin<T> {
     fn build(&self, app: &mut App) {
-        app.add_event::<SpawnEvent<T>>();
+        app.add_event::<SpawnEvent<T>>()
+            .add_event::<DelayedSpawnEvent<T>>()
+            .add_system(delay_spawn_events::<T>);
+    }
+
+    fn is_unique(&self) -> bool {
+        false
     }
 }
 

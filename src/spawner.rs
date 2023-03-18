@@ -11,8 +11,10 @@ pub trait Spawner {
     fn add_to_app(self, app: &mut App);
 }
 
-impl<T: Eq + Send + Sync + 'static, F: FnMut(Transform, &mut World) + 'static + Send + Sync> Spawner
-    for (T, F)
+impl<
+        T: Eq + Clone + Send + Sync + 'static,
+        F: FnMut(Transform, &mut World) + 'static + Send + Sync,
+    > Spawner for (T, F)
 {
     fn add_to_app(self, app: &mut App) {
         let (object, mut spawn_function) = self;

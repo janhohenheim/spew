@@ -8,3 +8,20 @@ edition = "2021"
 [dependencies.bevy]
 version = "0.10"
 default-features = false
+
+[dev-dependencies.bevy]
+version = "0.10"
+default-features = false
+features = [
+    "bevy_asset",
+    "bevy_winit",
+    "x11",
+    "bevy_render",
+    "bevy_core_pipeline",
+    "bevy_scene",
+    #"bevy_pbr",
+    "bevy_sprite",
+    "bevy_ui",
+    #"bevy_gltf",
+    #"png"
+]

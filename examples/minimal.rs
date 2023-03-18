@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use spew::prelude::*;
 
-#[derive(Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 enum Object {
     Cube,
 }
@@ -11,11 +11,11 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(SpewPlugin::<Object>::default())
         .add_spawner((Object::Cube, spawn_cube))
-        .add_startup_system(setup)
+        .add_system(spawn_something.on_startup())
         .run();
 }
 
-fn setup(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+fn spawn_something(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
     spawn_events.send(SpawnEvent {
         object: Object::Cube,
         transform: Transform::from_xyz(1.0, 2.0, 3.0),
