@@ -10,7 +10,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(SpewPlugin::<Object>::default())
-        .add_spawners(((Object::Cube, spawn_cube),))
+        .add_spawner((Object::Cube, spawn_cube))
         .add_startup_system(setup)
         .run();
 }

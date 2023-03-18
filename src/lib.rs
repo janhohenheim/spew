@@ -36,10 +36,15 @@ pub struct SpawnEvent<T: Eq + Send + Sync + 'static> {
 }
 
 pub trait SpewApp {
+    fn add_spawner<T: Spawner>(&mut self, spawner: T) -> &mut App;
     fn add_spawners<T: Spawners>(&mut self, spawners: T) -> &mut App;
 }
 
 impl SpewApp for App {
+    fn add_spawner<T: Spawner>(&mut self, spawner: T) -> &mut App {
+        spawner.add_to_app(self);
+        self
+    }
     fn add_spawners<T: Spawners>(&mut self, spawners: T) -> &mut App {
         spawners.add_to_app(self);
         self
