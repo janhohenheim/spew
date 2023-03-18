@@ -1,19 +1,31 @@
 use bevy::prelude::*;
 
 #[derive(Clone)]
-pub struct SpawnEvent<T: Eq + Clone + Send + Sync + 'static> {
+pub struct SpawnEvent<T, D>
+where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
     pub object: T,
-    pub transform: Transform,
+    pub data: D,
 }
 
 #[derive(Clone)]
-pub struct DelayedSpawnEvent<T: Eq + Clone + Send + Sync + 'static> {
-    pub spawn_event: SpawnEvent<T>,
+pub struct DelayedSpawnEvent<T, D>
+where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
+    pub spawn_event: SpawnEvent<T, D>,
     pub delay: usize,
 }
 
-impl<T: Eq + Clone + Send + Sync + 'static> SpawnEvent<T> {
-    pub fn with_delay(self, delay: usize) -> DelayedSpawnEvent<T> {
+impl<T, D> SpawnEvent<T, D>
+where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
+    pub fn with_delay(self, delay: usize) -> DelayedSpawnEvent<T, D> {
         DelayedSpawnEvent {
             spawn_event: self,
             delay,
@@ -21,13 +33,16 @@ impl<T: Eq + Clone + Send + Sync + 'static> SpawnEvent<T> {
     }
 }
 
-pub(crate) fn delay_spawn_events<T: Eq + Clone + Send + Sync + 'static>(
+pub(crate) fn delay_spawn_events<T, D>(
     mut delayed_spawn_events: ParamSet<(
-        EventReader<DelayedSpawnEvent<T>>,
-        EventWriter<DelayedSpawnEvent<T>>,
+        EventReader<DelayedSpawnEvent<T, D>>,
+        EventWriter<DelayedSpawnEvent<T, D>>,
     )>,
-    mut spawn_event_writer: EventWriter<SpawnEvent<T>>,
-) {
+    mut spawn_event_writer: EventWriter<SpawnEvent<T, D>>,
+) where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
     let mut advanced_events = Vec::new();
     for event in delayed_spawn_events.p0().iter() {
         if event.delay == 0 {

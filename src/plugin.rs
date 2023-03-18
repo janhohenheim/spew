@@ -4,26 +4,40 @@ use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 
 #[derive(Debug)]
-pub struct SpewPlugin<T: Eq + Clone + Send + Sync + 'static> {
-    spawner_enum_type: std::marker::PhantomData<T>,
+pub struct SpewPlugin<T, D>
+where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
+    _spawner_enum_type: std::marker::PhantomData<T>,
+    _data_type: std::marker::PhantomData<D>,
 }
 
-impl<T: Eq + Clone + Send + Sync + 'static> Default for SpewPlugin<T> {
+impl<T, D> Default for SpewPlugin<T, D>
+where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
     fn default() -> Self {
         Self {
-            spawner_enum_type: std::marker::PhantomData,
+            _spawner_enum_type: std::marker::PhantomData,
+            _data_type: std::marker::PhantomData,
         }
     }
 }
 
-impl<T: Eq + Clone + Send + Sync + 'static> Plugin for SpewPlugin<T> {
+impl<T, D> Plugin for SpewPlugin<T, D>
+where
+    T: Eq + Clone + Send + Sync + 'static,
+    D: Clone + Send + Sync + 'static,
+{
     fn build(&self, app: &mut App) {
-        app.add_event::<SpawnEvent<T>>()
-            .add_event::<DelayedSpawnEvent<T>>()
-            .add_system(delay_spawn_events::<T>);
+        app.add_event::<SpawnEvent<T, D>>()
+            .add_event::<DelayedSpawnEvent<T, D>>()
+            .add_system(delay_spawn_events::<T, D>);
         let world = &mut app.world;
 
-        let initial_state: SystemState<EventReader<SpawnEvent<T>>> = SystemState::new(world);
+        let initial_state: SystemState<EventReader<SpawnEvent<T, D>>> = SystemState::new(world);
         world.insert_resource(CachedSystemState(initial_state));
     }
 

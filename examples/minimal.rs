@@ -9,16 +9,19 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object>::default())
-        .add_spawner((Object::Cube, spawn_cube))
+        .add_plugin(SpewPlugin::<Object, Transform>::default())
+        .add_spawner((
+            Object::Cube,
+            Box::new(spawn_cube) as Box<dyn Fn(Transform, &mut World) + Send + Sync + 'static>,
+        ))
         .add_system(spawn_something.on_startup())
         .run();
 }
 
-fn spawn_something(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+fn spawn_something(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
     spawn_events.send(SpawnEvent {
         object: Object::Cube,
-        transform: Transform::from_xyz(1.0, 2.0, 3.0),
+        data: Transform::from_xyz(1.0, 2.0, 3.0),
     });
 }
 
