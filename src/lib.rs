@@ -1,6 +1,10 @@
+//! Spew is a simple helper to spawn entities in Bevy.  
+//! ## Usage
+//!
+
 #![allow(clippy::type_complexity)]
 #![allow(clippy::too_many_arguments)]
-// #![forbid(missing_docs)]
+#![forbid(missing_docs)]
 
 mod events;
 mod plugin;
