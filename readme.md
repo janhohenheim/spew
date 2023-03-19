@@ -51,22 +51,22 @@ fn main() {
         .run();
 }
 
-fn spawn_player(world: &mut World, transform: Transform) {
-    world.spawn((
+fn spawn_player(In(transform): In<Transform>, mut commands: Commands) { {
+    commands.spawn((
         Name::new("Spiffy the Adventurer"),
         TransformBundle::from_transform(transform),
     ));
 }
 
-fn spawn_monster(world: &mut World, transform: Transform) {
-    world.spawn((
+fn spawn_monster(In(transform): In<Transform>, mut commands: Commands) {
+    commands.spawn((
         Name::new("Grumblor the Grumpy"),
         TransformBundle::from_transform(transform),
     ));
 }
 
-fn spawn_coin(world: &mut World, transform: Transform) {
-    world.spawn((
+fn spawn_coin(In(transform): In<Transform>, mut commands: Commands) {
+    commands.spawn((
         Name::new("$1000"),
         TransformBundle::from_transform(transform),
     ));
@@ -87,15 +87,15 @@ fn main() {
 }
 
 fn setup_map(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
-    spawn_events.send(SpawnEvent::new(
+    spawn_events.send(SpawnEvent::with_data(
         Objects::Player,
         Transform::from_xyz(0.0, 0.0, 0.0),
     ));
-    spawn_events.send(SpawnEvent::new(
+    spawn_events.send(SpawnEvent::with_data(
         Objects::Monster,
         Transform::from_xyz(5.0, 0.0, 0.0),
     ));
-    spawn_events.send(SpawnEvent::new(
+    spawn_events.send(SpawnEvent::with_data(
         Objects::Coin,
         Transform::from_xyz(10.0, 0.0, 0.0),
     ));
