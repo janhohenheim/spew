@@ -18,8 +18,8 @@ enum Furniture {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Creature, Transform>::default())
-        .add_plugin(SpewPlugin::<Furniture, Transform>::default())
+        .add_plugin(SpewPlugin::<Creature>::default())
+        .add_plugin(SpewPlugin::<Furniture>::default())
         // This can also be done with two separate calls to add_spawners, if you prefer
         .add_spawners((
             (Creature::Human, spawn_human),
@@ -33,62 +33,44 @@ fn main() {
         .run();
 }
 
-fn spawn_creatures(mut spawn_events: EventWriter<SpawnEvent<Creature, Transform>>) {
-    spawn_events.send(SpawnEvent::new(
-        Creature::Human,
-        Transform::from_xyz(1.0, 2.0, 3.0),
-    ));
-    spawn_events.send(SpawnEvent::new(
-        Creature::Cow,
-        Transform::from_xyz(4.0, 2.0, 1.0),
-    ));
-    spawn_events.send(SpawnEvent::new(
-        Creature::Zombie,
-        Transform::from_xyz(6.0, 2.0, 5.0),
-    ));
+fn spawn_creatures(mut spawn_events: EventWriter<SpawnEvent<Creature>>) {
+    spawn_events.send(SpawnEvent::new(Creature::Human));
+    spawn_events.send(SpawnEvent::new(Creature::Cow));
+    spawn_events.send(SpawnEvent::new(Creature::Zombie));
 }
 
 fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture, Transform>>) {
-    spawn_events.send(SpawnEvent::new(
-        Furniture::Chair,
-        Transform::from_xyz(1.0, 2.0, 3.0),
-    ));
-    spawn_events.send(SpawnEvent::new(
-        Furniture::Table,
-        Transform::from_xyz(4.0, 2.0, 1.0),
-    ));
-    spawn_events.send(SpawnEvent::new(
-        Furniture::Bed,
-        Transform::from_xyz(6.0, 2.0, 5.0),
-    ));
+    spawn_events.send(SpawnEvent::new(Furniture::Chair));
+    spawn_events.send(SpawnEvent::new(Furniture::Table));
+    spawn_events.send(SpawnEvent::new(Furniture::Bed));
 }
 
-fn spawn_human(world: &mut World, transform: Transform) {
-    info!("Spawning human at {}", transform.translation);
-    world.spawn((Name::new("Human"), transform));
+fn spawn_human(mut commands: Commands) {
+    info!("Spawning human");
+    commands.spawn(Name::new("Human"));
 }
 
-fn spawn_cow(world: &mut World, transform: Transform) {
-    info!("Spawning cow at {}", transform.translation);
-    world.spawn((Name::new("Cow"), transform));
+fn spawn_cow(mut commands: Commands) {
+    info!("Spawning cow");
+    commands.spawn(Name::new("Cow"));
 }
 
-fn spawn_zombie(world: &mut World, transform: Transform) {
-    info!("Spawning zombie at {}", transform.translation);
-    world.spawn((Name::new("Zombie"), transform));
+fn spawn_zombie(mut commands: Commands) {
+    info!("Spawning zombie");
+    commands.spawn(Name::new("Zombie"));
 }
 
-fn spawn_chair(world: &mut World, transform: Transform) {
-    info!("Spawning chair at {}", transform.translation);
-    world.spawn((Name::new("Chair"), transform));
+fn spawn_chair(mut commands: Commands) {
+    info!("Spawning chair");
+    commands.spawn(Name::new("Chair"));
 }
 
-fn spawn_table(world: &mut World, transform: Transform) {
-    info!("Spawning table at {}", transform.translation);
-    world.spawn((Name::new("Table"), transform));
+fn spawn_table(mut commands: Commands) {
+    info!("Spawning table");
+    commands.spawn(Name::new("Table"));
 }
 
-fn spawn_bed(world: &mut World, transform: Transform) {
-    info!("Spawning bed at {}", transform.translation);
-    world.spawn((Name::new("Bed"), transform));
+fn spawn_bed(mut commands: Commands) {
+    info!("Spawning bed");
+    commands.spawn(Name::new("Bed"));
 }

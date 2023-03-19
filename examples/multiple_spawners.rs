@@ -11,7 +11,7 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object, Transform>::default())
+        .add_plugin(SpewPlugin::<Object>::default())
         .add_spawners((
             (Object::Cube, spawn_cube),
             (Object::Triangle, spawn_triangle),
@@ -21,32 +21,23 @@ fn main() {
         .run();
 }
 
-fn spawn_multiple_objects(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
-    spawn_events.send(SpawnEvent::new(
-        Object::Cube,
-        Transform::from_xyz(1.0, 2.0, 3.0),
-    ));
-    spawn_events.send(SpawnEvent::new(
-        Object::Triangle,
-        Transform::from_xyz(4.0, 2.0, 1.0),
-    ));
-    spawn_events.send(SpawnEvent::new(
-        Object::Sphere,
-        Transform::from_xyz(6.0, 2.0, 5.0),
-    ));
+fn spawn_multiple_objects(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+    spawn_events.send(SpawnEvent::new(Object::Cube));
+    spawn_events.send(SpawnEvent::new(Object::Triangle));
+    spawn_events.send(SpawnEvent::new(Object::Sphere));
 }
 
-fn spawn_cube(world: &mut World, transform: Transform) {
-    info!("Spawning cube at {}", transform.translation);
-    world.spawn((Name::new("Cube"), transform));
+fn spawn_cube(mut commands: Commands) {
+    info!("Spawning cube");
+    commands.spawn(Name::new("Cube"));
 }
 
-fn spawn_triangle(world: &mut World, transform: Transform) {
-    info!("Spawning triangle at {}", transform.translation);
-    world.spawn((Name::new("Triangle"), transform));
+fn spawn_triangle(mut commands: Commands) {
+    info!("Spawning triangle");
+    commands.spawn(Name::new("Triangle"));
 }
 
-fn spawn_sphere(world: &mut World, transform: Transform) {
-    info!("Spawning sphere at {}", transform.translation);
-    world.spawn((Name::new("Sphere"), transform));
+fn spawn_sphere(mut commands: Commands) {
+    info!("Spawning sphere");
+    commands.spawn(Name::new("Sphere"));
 }

@@ -6,53 +6,23 @@ enum Object {
     Cube,
 }
 
-struct SpawnData {
-    transform: Transform,
-    name: String,
-}
-
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object, SpawnData>::default())
-        .add_plugin(SpewPlugin::<Object, (Transform, String)>::default())
-        .add_spawners((
-            (Object::Cube, spawn_with_struct),
-            (Object::Cube, spawn_with_tuple),
-        ))
-        .add_system(spawn_something_with_struct.on_startup())
-        .add_system(spawn_something_with_tuple.on_startup())
+        .add_plugin(SpewPlugin::<Object, Transform>::default())
+        .add_spawners(((Object::Cube, spawn_cube_with_transform),))
+        .add_system(spawn_something_with_transform.on_startup())
         .run();
 }
 
-fn spawn_something_with_struct(mut spawn_events: EventWriter<SpawnEvent<Object, SpawnData>>) {
-    spawn_events.send(SpawnEvent::new(
+fn spawn_something_with_transform(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
+    spawn_events.send(SpawnEvent::with_data(
         Object::Cube,
-        SpawnData {
-            transform: Transform::from_xyz(1.0, 2.0, 3.0),
-            name: "Cube with struct".to_string(),
-        },
+        Transform::from_xyz(1.0, 2.0, 3.0),
     ));
 }
 
-fn spawn_something_with_tuple(
-    mut spawn_events: EventWriter<SpawnEvent<Object, (Transform, String)>>,
-) {
-    spawn_events.send(SpawnEvent::new(
-        Object::Cube,
-        (
-            Transform::from_xyz(4.0, 5.0, 6.0),
-            "Cube with tuple".to_string(),
-        ),
-    ));
-}
-
-fn spawn_with_struct(world: &mut World, data: SpawnData) {
-    info!("Spawning {} at {}", data.name, data.transform.translation);
-    world.spawn((Name::new("Cube"), data.transform));
-}
-
-fn spawn_with_tuple(world: &mut World, (transform, name): (Transform, String)) {
-    info!("Spawning {} at {}", name, transform.translation);
-    world.spawn((Name::new("Cube"), transform));
+fn spawn_cube_with_transform(In(transform): In<Transform>, mut commands: Commands) {
+    info!("Spawning cube at {}", transform.translation);
+    commands.spawn((Name::new("Cube"), transform));
 }
