@@ -50,7 +50,10 @@ where
     T: Eq + Send + Sync + 'static,
     D: Send + Sync + 'static,
 {
-    /// Delay the spawning of the object by a number of frames. See [`Delay::Frames`] for more information.
+    /// Delay the spawning of the object by a number of frames.
+    /// Note that objects are spawned a frame after they are spawned per default, so a delay of 1 means that the object will be spawned 2 frames after the event is sent.
+    ///
+    /// Setting a frame delay of 0 is the same as spawning it without delay.
     /// To be used in tandem with an [`EventWriter`] of type [`DelayedSpawnEvent`].
     ///
     /// # Example
@@ -79,7 +82,9 @@ where
         }
     }
 
-    /// Delay the spawning of the object by a number of seconds. See [`Delay::Seconds`] for more information.  
+    /// Delay the spawning of the object by a number of seconds.
+    /// Since objects are spawned a frame after they are spawned per default, a delay of 0.0 means that the object will be spawned 1 frame after the event is sent.
+    ///
     /// To be used in tandem with an [`EventWriter`] of type [`DelayedSpawnEvent`].
     ///
     /// # Example
@@ -111,12 +116,9 @@ where
 
 /// A delay for spawning an object.
 pub enum Delay {
-    /// Wait for a number of frames longer than usual.  
-    /// Note that objects are spawned a frame after they are spawned per default, so a delay of 1 means that the object will be spawned 2 frames after the event is sent.  
-    /// Setting a frame delay of 0 is the same as spawning it without delay.
+    /// Wait for a number of frames longer than usual.
     Frames(usize),
     /// Wait for a number of seconds before spawning the object.
-    /// Since objects are spawned a frame after they are spawned per default, a delay of 0.0 means that the object will be spawned 1 frame after the event is sent.
     Seconds(f32),
 }
 
