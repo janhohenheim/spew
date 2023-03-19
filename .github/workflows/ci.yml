@@ -80,4 +80,4 @@ jobs:
       - name: Check format
         run: cargo fmt --all -- --check
       - name: Run clippy
-        run: cargo clippy --all-targets ---examples -- --deny warnings
+        run: cargo clippy --all-targets --examples -- --deny warnings
