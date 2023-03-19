@@ -10,26 +10,26 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object>::default())
+        .add_plugin(SpewPlugin::<Object, Transform>::default())
         .add_spawner((Object::Cube, spawn_cube))
         .add_systems((spawn_without_delay, spawn_with_delay).on_startup())
         .run();
 }
 
 /// This cube will spawn 1 tick after the event is sent
-fn spawn_without_delay(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+fn spawn_without_delay(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
     spawn_events.send(SpawnEvent {
         object: Object::Cube,
-        transform: Transform::from_xyz(1.0, 2.0, 3.0),
+        data: Transform::from_xyz(1.0, 2.0, 3.0),
     });
 }
 
 /// This cube will spawn 1 tick later than usual, so in total 2 ticks after the event is sent
-fn spawn_with_delay(mut spawn_events: EventWriter<DelayedSpawnEvent<Object>>) {
+fn spawn_with_delay(mut spawn_events: EventWriter<DelayedSpawnEvent<Object, Transform>>) {
     spawn_events.send(
         SpawnEvent {
             object: Object::Cube,
-            transform: Transform::from_xyz(4.0, 5.0, 6.0),
+            data: Transform::from_xyz(4.0, 5.0, 6.0),
         }
         .with_delay(1),
     );

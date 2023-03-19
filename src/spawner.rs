@@ -3,11 +3,11 @@ use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 use bevy::utils::all_tuples;
 
-pub trait Spawners {
+pub trait Spawners<D> {
     fn add_to_app(self, app: &mut App);
 }
 
-pub trait Spawner {
+pub trait Spawner<D> {
     fn add_to_app(self, app: &mut App);
 }
 
@@ -18,9 +18,10 @@ pub(crate) struct CachedSystemState<
     D: Clone + Send + Sync + 'static,
 >(pub SystemState<EventReader<'static, 'static, SpawnEvent<T, D>>>);
 
-impl<T, D> Spawner for (T, Box<dyn Fn(D, &mut World) + 'static + Send + Sync>)
+impl<T, F, D> Spawner<D> for (T, F)
 where
     T: Eq + Clone + Send + Sync + 'static,
+    F: Fn(D, &mut World) + 'static + Send + Sync,
     D: Clone + Send + Sync + 'static,
 {
     fn add_to_app(self, app: &mut App) {
@@ -43,17 +44,18 @@ where
 }
 
 macro_rules! impl_spawners_tuples {
-    ($($name: ident),*) => {
-        impl<$($name),*> Spawners for ($($name,)*)
-            where
-                $($name: Spawner),*{
-                #[allow(non_snake_case, unused_variables)]
-                fn add_to_app(self, app: &mut App) {
-                    let ($($name,)*) = self;
-                    $($name.add_to_app(app);)*
-                }
+    ($(($param: ident, $spawners: ident)),*) => {
+        impl<$($param, $spawners),*> Spawners<($($param,)*)> for ($($spawners,)*)
+        where
+            $($spawners: Spawner<$param>),*
+        {
+            #[allow(non_snake_case, unused_variables)]
+            fn add_to_app(self, app: &mut App) {
+                let ($($spawners,)*) = self;
+                $($spawners.add_to_app(app);)*
             }
+        }
     }
 }
 
-all_tuples!(impl_spawners_tuples, 0, 15, S);
+all_tuples!(impl_spawners_tuples, 0, 15, S, D);

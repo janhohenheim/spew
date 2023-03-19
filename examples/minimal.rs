@@ -10,10 +10,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(SpewPlugin::<Object, Transform>::default())
-        .add_spawner((
-            Object::Cube,
-            Box::new(spawn_cube) as Box<dyn Fn(Transform, &mut World) + Send + Sync + 'static>,
-        ))
+        .add_spawner((Object::Cube, spawn_cube))
         .add_system(spawn_something.on_startup())
         .run();
 }

@@ -11,7 +11,7 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object>::default())
+        .add_plugin(SpewPlugin::<Object, Transform>::default())
         .add_spawners((
             (Object::Cube, spawn_cube),
             (Object::Triangle, spawn_triangle),
@@ -21,18 +21,18 @@ fn main() {
         .run();
 }
 
-fn spawn_multiple_objects(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+fn spawn_multiple_objects(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
     spawn_events.send(SpawnEvent {
         object: Object::Cube,
-        transform: Transform::from_xyz(1.0, 2.0, 3.0),
+        data: Transform::from_xyz(1.0, 2.0, 3.0),
     });
     spawn_events.send(SpawnEvent {
         object: Object::Triangle,
-        transform: Transform::from_xyz(4.0, 2.0, 1.0),
+        data: Transform::from_xyz(4.0, 2.0, 1.0),
     });
     spawn_events.send(SpawnEvent {
         object: Object::Sphere,
-        transform: Transform::from_xyz(6.0, 2.0, 5.0),
+        data: Transform::from_xyz(6.0, 2.0, 5.0),
     });
 }
 

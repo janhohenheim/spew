@@ -18,8 +18,8 @@ enum Furniture {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Creature>::default())
-        .add_plugin(SpewPlugin::<Furniture>::default())
+        .add_plugin(SpewPlugin::<Creature, Transform>::default())
+        .add_plugin(SpewPlugin::<Furniture, Transform>::default())
         // This can also be done with two separate calls to add_spawners, if you prefer
         .add_spawners((
             (Creature::Human, spawn_human),
@@ -33,33 +33,33 @@ fn main() {
         .run();
 }
 
-fn spawn_creatures(mut spawn_events: EventWriter<SpawnEvent<Creature>>) {
+fn spawn_creatures(mut spawn_events: EventWriter<SpawnEvent<Creature, Transform>>) {
     spawn_events.send(SpawnEvent {
         object: Creature::Human,
-        transform: Transform::from_xyz(1.0, 2.0, 3.0),
+        data: Transform::from_xyz(1.0, 2.0, 3.0),
     });
     spawn_events.send(SpawnEvent {
         object: Creature::Cow,
-        transform: Transform::from_xyz(4.0, 2.0, 1.0),
+        data: Transform::from_xyz(4.0, 2.0, 1.0),
     });
     spawn_events.send(SpawnEvent {
         object: Creature::Zombie,
-        transform: Transform::from_xyz(6.0, 2.0, 5.0),
+        data: Transform::from_xyz(6.0, 2.0, 5.0),
     });
 }
 
-fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture>>) {
+fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture, Transform>>) {
     spawn_events.send(SpawnEvent {
         object: Furniture::Chair,
-        transform: Transform::from_xyz(1.0, 2.0, 3.0),
+        data: Transform::from_xyz(1.0, 2.0, 3.0),
     });
     spawn_events.send(SpawnEvent {
         object: Furniture::Table,
-        transform: Transform::from_xyz(4.0, 2.0, 1.0),
+        data: Transform::from_xyz(4.0, 2.0, 1.0),
     });
     spawn_events.send(SpawnEvent {
         object: Furniture::Bed,
-        transform: Transform::from_xyz(6.0, 2.0, 5.0),
+        data: Transform::from_xyz(6.0, 2.0, 5.0),
     });
 }
 
