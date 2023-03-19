@@ -1,5 +1,5 @@
 use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
-use crate::spawner::{CachedSystemState, Spawner, Spawners};
+use crate::spawner::{Spawner, Spawners};
 use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 
@@ -35,10 +35,6 @@ where
         app.add_event::<SpawnEvent<T, D>>()
             .add_event::<DelayedSpawnEvent<T, D>>()
             .add_system(delay_spawn_events::<T, D>);
-        let world = &mut app.world;
-
-        let initial_state: SystemState<EventReader<SpawnEvent<T, D>>> = SystemState::new(world);
-        world.insert_resource(CachedSystemState(initial_state));
     }
 
     fn is_unique(&self) -> bool {

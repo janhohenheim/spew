@@ -1,7 +1,9 @@
 use crate::events::SpawnEvent;
+use bevy::ecs::event::ManualEventReader;
 use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 use bevy::utils::all_tuples;
+use std::fmt::Debug;
 
 pub trait Spawners<D> {
     fn add_to_app(self, app: &mut App);
@@ -11,33 +13,35 @@ pub trait Spawner<D> {
     fn add_to_app(self, app: &mut App);
 }
 
-#[derive(Resource, Deref, DerefMut)]
-/// See <https://docs.rs/bevy/latest/bevy/ecs/system/struct.SystemState.html#warning>
-pub(crate) struct CachedSystemState<
-    T: Eq + Clone + Send + Sync + 'static,
-    D: Clone + Send + Sync + 'static,
->(pub SystemState<EventReader<'static, 'static, SpawnEvent<T, D>>>);
-
 impl<T, F, D> Spawner<D> for (T, F)
 where
-    T: Eq + Clone + Send + Sync + 'static,
+    T: Debug + Eq + Clone + Send + Sync + 'static,
     F: Fn(D, &mut World) + 'static + Send + Sync,
     D: Clone + Send + Sync + 'static,
 {
     fn add_to_app(self, app: &mut App) {
         let (object, spawn_function) = self;
         let system = move |world: &mut World| {
-            world.resource_scope(|world, mut cached_state: Mut<CachedSystemState<T, D>>| {
-                let mut event_reader = cached_state.get_mut(world);
-                let data: Vec<_> = event_reader
-                    .iter()
-                    .filter(|event| event.object == object)
-                    .map(|event| event.data.clone())
-                    .collect();
-                for data in data {
-                    spawn_function(data, world);
+            let mut events = world
+                .get_resource_mut::<Events<SpawnEvent<T, D>>>()
+                .unwrap();
+            let mut handled_events = Vec::new();
+            let mut unhandled_events = Vec::new();
+
+            for event in events.drain() {
+                if event.object == object {
+                    handled_events.push(event);
+                } else {
+                    unhandled_events.push(event);
                 }
-            });
+            }
+            for event in unhandled_events {
+                events.send(event);
+            }
+
+            for event in handled_events {
+                spawn_function(event.data, world);
+            }
         };
         app.add_system(system);
     }
