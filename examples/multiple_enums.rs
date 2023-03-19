@@ -39,7 +39,7 @@ fn spawn_creatures(mut spawn_events: EventWriter<SpawnEvent<Creature>>) {
     spawn_events.send(SpawnEvent::new(Creature::Zombie));
 }
 
-fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture, Transform>>) {
+fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture>>) {
     spawn_events.send(SpawnEvent::new(Furniture::Chair));
     spawn_events.send(SpawnEvent::new(Furniture::Table));
     spawn_events.send(SpawnEvent::new(Furniture::Bed));

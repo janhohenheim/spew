@@ -16,7 +16,7 @@ fn main() {
         .run();
 }
 
-fn spawn_various_delays(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
+fn spawn_various_delays(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
     // This cube will spawn 1 tick after the event is sent
     spawn_events.send(SpawnEvent::new(Object::Cube));
 
