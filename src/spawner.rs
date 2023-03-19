@@ -1,34 +1,36 @@
 use crate::events::ReadySpawnEvent;
 use crate::plugin::DelayerSystemSet;
+use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 use bevy::utils::all_tuples;
 use std::fmt::Debug;
 
 /// Abstraction over a tuple of [`Spawner`]s.
 /// See [`SpewApp::add_spawners`](crate::prelude::SpewApp::add_spawners) for more information.
-pub trait Spawners<D = ()> {
+pub trait Spawners<Marker>: Send + Sync + 'static {
     /// Add all spawners to the app. Called internally.
     fn add_to_app(self, app: &mut App);
 }
 
 /// Abstraction over a tuple of an enum variant and a spawning function.
 /// See [`SpewApp::add_spawners`](crate::prelude::SpewApp::add_spawners) for more information.
-pub trait Spawner<D = ()> {
+pub trait Spawner<Marker>: Send + Sync + 'static {
     /// Add the spawner to the app. Called internally.
     fn add_to_app(self, app: &mut App);
 }
 
-impl<T, F, D> Spawner<D> for (T, F)
+impl<T, F, Marker> Spawner<Marker> for (T, F)
 where
     T: Debug + Eq + Send + Sync + 'static,
-    F: Fn(&mut World, D) + 'static + Send + Sync,
-    D: Send + Sync + 'static,
+    F: SystemParamFunction<Marker>,
+    Marker: Send + Sync + 'static,
+    F::In: Send + Sync + 'static,
 {
     fn add_to_app(self, app: &mut App) {
-        let (object, spawn_function) = self;
-        let system = move |world: &mut World| {
+        let (object, mut spawn_function) = self;
+        let system = move |mut world: &mut World| {
             let mut events = world
-                .get_resource_mut::<Events<ReadySpawnEvent<T, D>>>()
+                .get_resource_mut::<Events<ReadySpawnEvent<T, F::In>>>()
                 .unwrap();
             let mut handled_events = Vec::new();
             let mut unhandled_events = Vec::new();
@@ -46,7 +48,10 @@ where
             }
 
             for event in handled_events {
-                spawn_function(world, event.data);
+                let mut system_state: SystemState<F::Param> = SystemState::new(&mut world);
+                let user_data = event.data;
+                let param = system_state.get_mut(&mut world);
+                spawn_function.run(user_data, param);
             }
         };
         app.add_system(system.after(DelayerSystemSet));
