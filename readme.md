@@ -1,7 +1,9 @@
 # Spew
 
-A simple helper for spawning objects in Bevy.
+[![crates.io](https://img.shields.io/crates/v/spew)](https://crates.io/crates/spew)
+[![docs.rs](https://docs.rs/spew/badge.svg)](https://docs.rs/spew)
 
+A simple helper for spawning objects in Bevy.
 
 ## Usage
 
@@ -15,17 +17,99 @@ enum Objects {
 }
 ```
 
-then, add the plugin to your app:
+Think about which data you want to pass to the spawning function. In this example, we will specify a `Transform` for the new object.
+Next, add the plugin to your app, noting the two types we just mentioned:
 
-```rust
+```rust,ignore
+use spew::prelude::*;
+use bevy::prelude::*;
 
+fn main() {
+    App::build()
+    // ...
+        .add_plugin(SpewPlugin::<Objects, Transform>::default()) // <--- Add the plugin
+    // ...
+        .run();
+}
 ```
 
+Now, we are ready to register our spawn functions. Each variant of the `enum` will be associated with its own spawn function that takes in a `&mut World` and the user provided data:
+```rust,ignore
+use spew::prelude::*;
+use bevy::prelude::*;
+
+fn main() {
+    App::build()
+    // ...
+        .add_spawners( // <--- Register the spawn functions
+            (Objects::Player, spawn_player),
+            (Objects::Monster, spawn_monster),
+            (Objects::Coin, spawn_coin),
+        )
+    // ...
+        .run();
+}
+
+fn spawn_player(world: &mut World, transform: Transform) {
+    world.spawn((
+        Name::new("Spiffy the Adventurer"),
+        TransformBundle::from_transform(transform),
+    ));
+}
+
+fn spawn_monster(world: &mut World, transform: Transform) {
+    world.spawn((
+        Name::new("Grumblor the Grumpy"),
+        TransformBundle::from_transform(transform),
+    ));
+}
+
+fn spawn_coin(world: &mut World, transform: Transform) {
+    world.spawn((
+        Name::new("$1000"),
+        TransformBundle::from_transform(transform),
+    ));
+}
+```
+
+Finally, we can set our spawn functions to work by sending a `SpawnEvent`:
+```rust,ignore
+use spew::prelude::*;
+use bevy::prelude::*;
+
+fn main() {
+    App::build()
+    // ...
+        .add_system(setup_map.on_startup())
+    // ...
+        .run();
+}
+
+fn setup_map(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
+    spawn_events.send(SpawnEvent::new(
+        Objects::Player,
+        Transform::from_xyz(0.0, 0.0, 0.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Objects::Monster,
+        Transform::from_xyz(5.0, 0.0, 0.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Objects::Coin,
+        Transform::from_xyz(10.0, 0.0, 0.0),
+    ));
+}
+```
+
+You can read through the [docs](https://docs.rs/spew) or peruse the [examples](https://github.com/janhohenheim/spew/examples) for more use cases.
+Other cool stuff you can do is delay the spawning by a certain amount of frames or time or organize your spawn lists into multiple enums.
 
 ## Motivation
 
 Bevy's `Commands` API allows you to spawn new entities with arbitrary components:
 ```rust
+use bevy::prelude::*;
+
 fn spawn_player(commands: &mut Commands) {
     commands.spawn((
         Name::new("Adventurer"),
@@ -35,6 +119,9 @@ fn spawn_player(commands: &mut Commands) {
 ```
 This works great! We can spawn more complex objects by just adding more components like assets:
 ```rust
+use std::f32::consts::TAU;
+use bevy::prelude::*;
+
 fn spawn_bullet(commands: &mut Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         Name::new("Bullet"),
@@ -52,7 +139,8 @@ fn spawn_bullet(commands: &mut Commands, asset_server: Res<AssetServer>) {
 ```
 but, in a real project, we would not spawn a bullet like that. The bullet would be spawned by a weapon at a certain translation.
 We might thus encapsulate the bullet spawning like this:
-```rust
+```rust,ignore
+use bevy::prelude::*;
 fn handle_input(...) {
     // ...
     if should_fire_bullet {
