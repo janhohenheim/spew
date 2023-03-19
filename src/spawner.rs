@@ -1,18 +1,19 @@
-use crate::events::SpawnEvent;
+use crate::events::ReadySpawnEvent;
+use crate::plugin::DelayerSystemSet;
 use bevy::prelude::*;
 use bevy::utils::all_tuples;
 use std::fmt::Debug;
 
 /// Abstraction over a tuple of [`Spawner`]s.
 /// See [`SpewApp::add_spawners`](crate::prelude::SpewApp::add_spawners) for more information.
-pub trait Spawners<D> {
+pub trait Spawners<D = ()> {
     /// Add all spawners to the app. Called internally.
     fn add_to_app(self, app: &mut App);
 }
 
 /// Abstraction over a tuple of an enum variant and a spawning function.
 /// See [`SpewApp::add_spawners`](crate::prelude::SpewApp::add_spawners) for more information.
-pub trait Spawner<D> {
+pub trait Spawner<D = ()> {
     /// Add the spawner to the app. Called internally.
     fn add_to_app(self, app: &mut App);
 }
@@ -27,7 +28,7 @@ where
         let (object, spawn_function) = self;
         let system = move |world: &mut World| {
             let mut events = world
-                .get_resource_mut::<Events<SpawnEvent<T, D>>>()
+                .get_resource_mut::<Events<ReadySpawnEvent<T, D>>>()
                 .unwrap();
             let mut handled_events = Vec::new();
             let mut unhandled_events = Vec::new();
@@ -48,7 +49,7 @@ where
                 spawn_function(world, event.data);
             }
         };
-        app.add_system(system);
+        app.add_system(system.after(DelayerSystemSet));
     }
 }
 

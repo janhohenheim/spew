@@ -22,18 +22,18 @@ fn main() {
 }
 
 fn spawn_multiple_objects(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
-    spawn_events.send(SpawnEvent {
-        object: Object::Cube,
-        data: Transform::from_xyz(1.0, 2.0, 3.0),
-    });
-    spawn_events.send(SpawnEvent {
-        object: Object::Triangle,
-        data: Transform::from_xyz(4.0, 2.0, 1.0),
-    });
-    spawn_events.send(SpawnEvent {
-        object: Object::Sphere,
-        data: Transform::from_xyz(6.0, 2.0, 5.0),
-    });
+    spawn_events.send(SpawnEvent::new(
+        Object::Cube,
+        Transform::from_xyz(1.0, 2.0, 3.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Object::Triangle,
+        Transform::from_xyz(4.0, 2.0, 1.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Object::Sphere,
+        Transform::from_xyz(6.0, 2.0, 5.0),
+    ));
 }
 
 fn spawn_cube(world: &mut World, transform: Transform) {

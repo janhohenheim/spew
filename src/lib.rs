@@ -10,7 +10,7 @@ mod spawner;
 /// Everything you need to get started
 pub mod prelude {
     pub use crate::{
-        events::{DelayedSpawnEvent, SpawnEvent},
+        events::{NewSpawnEventWithoutData, SpawnEvent},
         plugin::SpewApp,
         plugin::SpewPlugin,
     };
