@@ -53,7 +53,7 @@ where
     fn build(&self, app: &mut App) {
         app.add_event::<SpawnEvent<T, D>>()
             .add_event::<ReadySpawnEvent<T, D>>()
-            .add_system(delay_spawn_events::<T, D>.in_set(DelayerSystemSet));
+            .add_system(delay_spawn_events::<T, D>.in_set(SpewSystemSet));
     }
 
     fn is_unique(&self) -> bool {
@@ -61,8 +61,9 @@ where
     }
 }
 
+/// The SystemSet that contains all spew systems.
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
-pub(crate) struct DelayerSystemSet;
+pub struct SpewSystemSet;
 
 /// A trait that allows adding spawners to an [`App`].
 /// Spawners are tuples of an object and a spawning function, e.g. `(Object::Cube, spawn_cube)`.
