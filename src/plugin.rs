@@ -65,7 +65,8 @@ where
 pub(crate) struct DelayerSystemSet;
 
 /// A trait that allows adding spawners to an [`App`].
-/// Spawners are tuples of an object and a spawning function, e.g. `(Object::Cube, spawn_cube)`. A spawning function has the signature `fn(&mut Commands, D)`, where D is any user provided data.
+/// Spawners are tuples of an object and a spawning function, e.g. `(Object::Cube, spawn_cube)`.
+/// A spawning function has the same signature as a bevy system function, where user provided data is passed as an `In<D>` parameter in the first position.
 ///
 /// The spawner's combination of object enum and user data must have been registered with an own [`SpewPlugin`] beforehand.
 pub trait SpewApp {
@@ -89,9 +90,9 @@ pub trait SpewApp {
     ///         .run();
     /// }
     ///
-    /// fn spawn_cube(world: &mut World, transform: Transform) {
+    /// fn spawn_cube(In(transform): In<Transform>, mut commands: Commands) {
     ///    info!("Spawning cube at {}", transform.translation);
-    ///    world.spawn((Name::new("Cube"), transform));
+    ///    commands.spawn((Name::new("Cube"), transform));
     /// }
     /// ```
     fn add_spawner<T, D>(&mut self, spawner: T) -> &mut App
@@ -124,19 +125,19 @@ pub trait SpewApp {
     ///         .run();
     /// }
     ///
-    /// fn spawn_cube(world: &mut World, transform: Transform) {
+    /// fn spawn_cube(In(transform): In<Transform>, mut commands: Commands) {
     ///    info!("Spawning cube at {}", transform.translation);
-    ///    world.spawn((Name::new("Cube"), transform));
+    ///    commands.spawn((Name::new("Cube"), transform));
     /// }
     ///
-    /// fn spawn_triangle(world: &mut World, transform: Transform) {
+    /// fn spawn_triangle(In(transform): In<Transform>, mut commands: Commands) {
     ///    info!("Spawning triangle at {}", transform.translation);
-    ///    world.spawn((Name::new("Cube"), transform));
+    ///    commands.spawn((Name::new("Cube"), transform));
     /// }
     ///
-    /// fn spawn_sphere(world: &mut World, transform: Transform) {
+    /// fn spawn_sphere(In(transform): In<Transform>, mut commands: Commands) {
     ///    info!("Spawning sphere at {}", transform.translation);
-    ///    world.spawn((Name::new("Cube"), transform));
+    ///    commands.spawn((Name::new("Cube"), transform));
     /// }
     /// ```
     fn add_spawners<T, D>(&mut self, spawners: T) -> &mut App

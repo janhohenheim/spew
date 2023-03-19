@@ -9,20 +9,17 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object, Transform>::default())
+        .add_plugin(SpewPlugin::<Object>::default())
         .add_spawner((Object::Cube, spawn_cube))
         .add_system(spawn_something.on_startup())
         .run();
 }
 
-fn spawn_something(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
-    spawn_events.send(SpawnEvent::new(
-        Object::Cube,
-        Transform::from_xyz(1.0, 2.0, 3.0),
-    ));
+fn spawn_something(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+    spawn_events.send(SpawnEvent::new(Object::Cube));
 }
 
-fn spawn_cube(In(transform): In<Transform>, mut commands: Commands) {
-    info!("Spawning cube at {}", transform.translation);
-    commands.spawn((Name::new("Cube"), transform));
+fn spawn_cube(mut commands: Commands) {
+    info!("Spawning cube");
+    commands.spawn(Name::new("Cube"));
 }

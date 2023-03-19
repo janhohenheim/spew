@@ -15,13 +15,24 @@ use bevy::prelude::*;
 ///    Cube
 /// }
 ///
-/// fn spawn_something(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
-///    spawn_events.send(SpawnEvent::new(
+/// fn spawn_without_data(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
+///    spawn_events.send(SpawnEvent::new(Object::Cube));
+/// }
+///
+/// fn spawn_with_data(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
+///    spawn_events.send(SpawnEvent::with_data(
 ///       Object::Cube,
 ///       Transform::from_xyz(1.0, 2.0, 3.0),
 ///   ));
 /// }
-pub struct SpawnEvent<T, D>
+///
+/// fn spawn_with_delay(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
+///    spawn_events.send(SpawnEvent::with_data(
+///       Object::Cube,
+///       Transform::from_xyz(1.0, 2.0, 3.0),
+///   ).delay_frames(10));
+/// }
+pub struct SpawnEvent<T, D = ()>
 where
     T: Eq + Send + Sync + 'static,
     D: Send + Sync + 'static,
@@ -46,29 +57,38 @@ where
     D: Send + Sync + Default + 'static,
 {
     fn default() -> Self {
-        Self {
-            object: default(),
-            data: default(),
-            delay: default(),
-        }
+        Self::new(default())
     }
 }
 
-/// A trait that allows creating a [`SpawnEvent`] without user-provided data.
-pub trait NewSpawnEventWithoutData<T> {
-    /// Create a new spawn event
-    #[allow(clippy::new_ret_no_self)]
-    fn new(object: T) -> SpawnEvent<T, ()>
-    where
-        T: Eq + Send + Sync + 'static;
-}
-
-impl<T> NewSpawnEventWithoutData<T> for SpawnEvent<T, ()>
+impl<T, D> SpawnEvent<T, D>
 where
     T: Eq + Send + Sync + 'static,
+    D: Default + Send + Sync + 'static,
 {
-    fn new(object: T) -> SpawnEvent<T, ()> {
-        SpawnEvent::new(object, ())
+    /// Create a new `SpawnEvent` with the given object.
+    /// The data will be set to its default value.
+    /// Use this if you don't need to pass any data to the spawner or plan on initializing the data later with [`SpawnEvent::data`].
+    /// # Example
+    /// ```rust
+    /// use spew::prelude::*;
+    /// use bevy::prelude::*;
+    ///
+    /// #[derive(Debug, Eq, PartialEq)]
+    /// enum Object {
+    ///    Cube
+    /// }
+    ///
+    /// let spawn_event = SpawnEvent::new(Object::Cube);
+    /// assert_eq!(spawn_event.object, Object::Cube);
+    /// assert_eq!(spawn_event.data, ());
+    /// ```
+    pub fn new(object: T) -> SpawnEvent<T, D> {
+        SpawnEvent {
+            object,
+            data: default(),
+            delay: default(),
+        }
     }
 }
 
@@ -77,9 +97,23 @@ where
     T: Eq + Send + Sync + 'static,
     D: Send + Sync + 'static,
 {
-    /// Create a new spawn event with user data and no delay.
-    pub fn new(object: T, data: D) -> Self {
-        Self {
+    /// Create a new `SpawnEvent` with the given object and data.
+    ///
+    /// # Example
+    /// ```rust
+    /// use spew::prelude::*;
+    /// use bevy::prelude::*;
+    ///
+    /// #[derive(Debug, Eq, PartialEq)]
+    /// enum Object {
+    ///   Cube
+    /// }
+    ///
+    /// let spawn_event = SpawnEvent::with_data(Object::Cube, Name::new("Dirt Block"));
+    /// assert_eq!(spawn_event.object, Object::Cube);
+    /// assert_eq!(spawn_event.data, Name::new("Dirt Block"));
+    pub fn with_data(object: T, data: D) -> SpawnEvent<T, D> {
+        SpawnEvent {
             object,
             data,
             delay: default(),
@@ -128,17 +162,32 @@ where
     ///     Cube
     /// }
     ///
-    /// fn spawn_with_delay(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
-    ///     spawn_events.send(
-    ///         SpawnEvent::new(
-    ///             Object::Cube,
-    ///             Transform::from_xyz(4.0, 5.0, 6.0),
-    ///         )
-    ///         .delay_seconds(1.0),
-    ///     );
-    /// }
+    /// let spawn_event = SpawnEvent::new(Object::Cube).delay_seconds(1.0);
+    /// assert_eq!(spawn_event.object, Object::Cube);
+    /// assert!(matches!(spawn_event.delay, Delay::Seconds(_)));
+    /// ```
     pub fn delay_seconds(mut self, delay: f32) -> Self {
         self.delay = Delay::Seconds(delay);
+        self
+    }
+
+    /// Change the provided data. This is useful when using [`SpawnEvent::new`], since it initializes the data with the default value.
+    /// # Example
+    /// ```rust
+    /// use spew::prelude::*;
+    /// use bevy::prelude::*;
+    ///
+    /// #[derive(Debug, Eq, PartialEq)]
+    /// enum Object {
+    ///    Cube
+    /// }
+    ///
+    /// let spawn_event = SpawnEvent::new(Object::Cube).data(Name::new("Dirt Block");
+    /// assert_eq!(spawn_event.object, Object::Cube);
+    /// assert_eq!(spawn_event.data, Name::new("Dirt Block"));
+    /// ```
+    pub fn data(mut self, data: D) -> Self {
+        self.data = data;
         self
     }
 }
