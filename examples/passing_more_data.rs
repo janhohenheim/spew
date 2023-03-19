@@ -26,25 +26,25 @@ fn main() {
 }
 
 fn spawn_something_with_struct(mut spawn_events: EventWriter<SpawnEvent<Object, SpawnData>>) {
-    spawn_events.send(SpawnEvent {
-        object: Object::Cube,
-        data: SpawnData {
+    spawn_events.send(SpawnEvent::new(
+        Object::Cube,
+        SpawnData {
             transform: Transform::from_xyz(1.0, 2.0, 3.0),
             name: "Cube with struct".to_string(),
         },
-    });
+    ));
 }
 
 fn spawn_something_with_tuple(
     mut spawn_events: EventWriter<SpawnEvent<Object, (Transform, String)>>,
 ) {
-    spawn_events.send(SpawnEvent {
-        object: Object::Cube,
-        data: (
+    spawn_events.send(SpawnEvent::new(
+        Object::Cube,
+        (
             Transform::from_xyz(4.0, 5.0, 6.0),
             "Cube with tuple".to_string(),
         ),
-    });
+    ));
 }
 
 fn spawn_with_struct(world: &mut World, data: SpawnData) {

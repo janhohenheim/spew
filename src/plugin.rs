@@ -1,4 +1,4 @@
-use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
+use crate::events::{delay_spawn_events, ReadySpawnEvent, SpawnEvent};
 use crate::spawner::{Spawner, Spawners};
 use bevy::prelude::*;
 
@@ -23,7 +23,7 @@ use bevy::prelude::*;
 ///      .add_plugin(SpewPlugin::<Object, Transform>::default())
 ///      .run();
 /// }
-pub struct SpewPlugin<T, D>
+pub struct SpewPlugin<T, D = ()>
 where
     T: Eq + Send + Sync + 'static,
     D: Send + Sync + 'static,
@@ -52,14 +52,17 @@ where
 {
     fn build(&self, app: &mut App) {
         app.add_event::<SpawnEvent<T, D>>()
-            .add_event::<DelayedSpawnEvent<T, D>>()
-            .add_system(delay_spawn_events::<T, D>);
+            .add_event::<ReadySpawnEvent<T, D>>()
+            .add_system(delay_spawn_events::<T, D>.in_set(DelayerSystemSet));
     }
 
     fn is_unique(&self) -> bool {
         false
     }
 }
+
+#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
+pub(crate) struct DelayerSystemSet;
 
 /// A trait that allows adding spawners to an [`App`].
 /// Spawners are tuples of an object and a spawning function, e.g. `(Object::Cube, spawn_cube)`. A spawning function has the signature `fn(&mut Commands, D)`, where D is any user provided data.

@@ -34,33 +34,33 @@ fn main() {
 }
 
 fn spawn_creatures(mut spawn_events: EventWriter<SpawnEvent<Creature, Transform>>) {
-    spawn_events.send(SpawnEvent {
-        object: Creature::Human,
-        data: Transform::from_xyz(1.0, 2.0, 3.0),
-    });
-    spawn_events.send(SpawnEvent {
-        object: Creature::Cow,
-        data: Transform::from_xyz(4.0, 2.0, 1.0),
-    });
-    spawn_events.send(SpawnEvent {
-        object: Creature::Zombie,
-        data: Transform::from_xyz(6.0, 2.0, 5.0),
-    });
+    spawn_events.send(SpawnEvent::new(
+        Creature::Human,
+        Transform::from_xyz(1.0, 2.0, 3.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Creature::Cow,
+        Transform::from_xyz(4.0, 2.0, 1.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Creature::Zombie,
+        Transform::from_xyz(6.0, 2.0, 5.0),
+    ));
 }
 
 fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture, Transform>>) {
-    spawn_events.send(SpawnEvent {
-        object: Furniture::Chair,
-        data: Transform::from_xyz(1.0, 2.0, 3.0),
-    });
-    spawn_events.send(SpawnEvent {
-        object: Furniture::Table,
-        data: Transform::from_xyz(4.0, 2.0, 1.0),
-    });
-    spawn_events.send(SpawnEvent {
-        object: Furniture::Bed,
-        data: Transform::from_xyz(6.0, 2.0, 5.0),
-    });
+    spawn_events.send(SpawnEvent::new(
+        Furniture::Chair,
+        Transform::from_xyz(1.0, 2.0, 3.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Furniture::Table,
+        Transform::from_xyz(4.0, 2.0, 1.0),
+    ));
+    spawn_events.send(SpawnEvent::new(
+        Furniture::Bed,
+        Transform::from_xyz(6.0, 2.0, 5.0),
+    ));
 }
 
 fn spawn_human(world: &mut World, transform: Transform) {
