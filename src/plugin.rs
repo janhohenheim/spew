@@ -1,13 +1,11 @@
 use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
 use crate::spawner::{Spawner, Spawners};
-use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 
-#[derive(Debug)]
 pub struct SpewPlugin<T, D>
 where
-    T: Eq + Clone + Send + Sync + 'static,
-    D: Clone + Send + Sync + 'static,
+    T: Eq + Send + Sync + 'static,
+    D: Send + Sync + 'static,
 {
     _spawner_enum_type: std::marker::PhantomData<T>,
     _data_type: std::marker::PhantomData<D>,
@@ -15,8 +13,8 @@ where
 
 impl<T, D> Default for SpewPlugin<T, D>
 where
-    T: Eq + Clone + Send + Sync + 'static,
-    D: Clone + Send + Sync + 'static,
+    T: Eq + Send + Sync + 'static,
+    D: Send + Sync + 'static,
 {
     fn default() -> Self {
         Self {
@@ -28,8 +26,8 @@ where
 
 impl<T, D> Plugin for SpewPlugin<T, D>
 where
-    T: Eq + Clone + Send + Sync + 'static,
-    D: Clone + Send + Sync + 'static,
+    T: Eq + Send + Sync + 'static,
+    D: Send + Sync + 'static,
 {
     fn build(&self, app: &mut App) {
         app.add_event::<SpawnEvent<T, D>>()

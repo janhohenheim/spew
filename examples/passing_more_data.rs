@@ -1,12 +1,11 @@
 use bevy::prelude::*;
 use spew::prelude::*;
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq)]
 enum Object {
     Cube,
 }
 
-#[derive(Clone)]
 struct SpawnData {
     transform: Transform,
     name: String,

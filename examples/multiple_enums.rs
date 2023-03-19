@@ -1,14 +1,14 @@
 use bevy::prelude::*;
 use spew::prelude::*;
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq)]
 enum Creature {
     Human,
     Cow,
     Zombie,
 }
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq)]
 enum Furniture {
     Chair,
     Table,

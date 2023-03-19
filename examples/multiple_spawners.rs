@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use spew::prelude::*;
 
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Eq, PartialEq)]
 enum Object {
     Cube,
     Triangle,

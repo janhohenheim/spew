@@ -1,6 +1,4 @@
 use crate::events::SpawnEvent;
-use bevy::ecs::event::ManualEventReader;
-use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 use bevy::utils::all_tuples;
 use std::fmt::Debug;
@@ -15,9 +13,9 @@ pub trait Spawner<D> {
 
 impl<T, F, D> Spawner<D> for (T, F)
 where
-    T: Debug + Eq + Clone + Send + Sync + 'static,
+    T: Debug + Eq + Send + Sync + 'static,
     F: Fn(D, &mut World) + 'static + Send + Sync,
-    D: Clone + Send + Sync + 'static,
+    D: Send + Sync + 'static,
 {
     fn add_to_app(self, app: &mut App) {
         let (object, spawn_function) = self;
@@ -35,6 +33,7 @@ where
                     unhandled_events.push(event);
                 }
             }
+
             for event in unhandled_events {
                 events.send(event);
             }
