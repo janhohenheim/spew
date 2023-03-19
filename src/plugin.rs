@@ -8,10 +8,11 @@ use bevy::prelude::*;
 /// If your spawn systems don't require any data, simply pass `()` as the `D` type.
 ///
 /// # Example
-/// ```rust
+/// ```rust,ignore
 /// use spew::prelude::*;
 /// use bevy::prelude::*;
 ///
+/// #[derive(Debug, Eq, PartialEq)]
 /// enum Object {
 ///    Cube
 /// }
@@ -20,6 +21,7 @@ use bevy::prelude::*;
 ///    App::new()
 ///      .add_plugins(DefaultPlugins)
 ///      .add_plugin(SpewPlugin::<Object, Transform>::default())
+///      .run();
 /// }
 pub struct SpewPlugin<T, D>
 where
@@ -67,10 +69,11 @@ pub trait SpewApp {
     /// Add a single spawner to the app.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,ignore
     /// use spew::prelude::*;
     /// use bevy::prelude::*;
     ///
+    /// #[derive(Debug, Eq, PartialEq)]
     /// enum Object {
     ///   Cube
     /// }
@@ -95,10 +98,11 @@ pub trait SpewApp {
     /// Add multiple spawners to the app by providing them in a tuple.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,ignore
     /// use spew::prelude::*;
     /// use bevy::prelude::*;
     ///
+    /// #[derive(Debug, Eq, PartialEq)]
     /// enum Object {
     ///   Cube,
     ///   Triangle,

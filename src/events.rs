@@ -10,6 +10,7 @@ use bevy::prelude::*;
 /// use spew::prelude::*;
 /// use bevy::prelude::*;
 ///
+/// #[derive(Debug, Eq, PartialEq)]
 /// enum Object {
 ///    Cube
 /// }
@@ -56,6 +57,8 @@ where
     /// ```rust
     /// use spew::prelude::*;
     /// use bevy::prelude::*;
+    ///
+    /// #[derive(Debug, Eq, PartialEq)]
     /// enum Object {
     ///     Cube
     /// }
@@ -83,6 +86,8 @@ where
     /// ```rust
     /// use spew::prelude::*;
     /// use bevy::prelude::*;
+    ///
+    /// #[derive(Debug, Eq, PartialEq)]
     /// enum Object {
     ///     Cube
     /// }

@@ -10,6 +10,7 @@ A simple helper for spawning objects in Bevy.
 First, create an `enum` that holds objects you might want to spawn:
 
 ```rust
+#[derive(Debug, Eq, PartialEq)]
 enum Objects {
     Player,
     Monster,
@@ -25,7 +26,7 @@ use spew::prelude::*;
 use bevy::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
     // ...
         .add_plugin(SpewPlugin::<Objects, Transform>::default()) // <--- Add the plugin
     // ...
@@ -39,7 +40,7 @@ use spew::prelude::*;
 use bevy::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
     // ...
         .add_spawners( // <--- Register the spawn functions
             (Objects::Player, spawn_player),
@@ -78,7 +79,7 @@ use spew::prelude::*;
 use bevy::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
     // ...
         .add_system(setup_map.on_startup())
     // ...
