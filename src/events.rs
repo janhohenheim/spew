@@ -79,7 +79,7 @@ where
     ///    Cube
     /// }
     ///
-    /// let spawn_event = SpawnEvent::new(Object::Cube);
+    /// let spawn_event: SpawnEvent<Object> = SpawnEvent::new(Object::Cube);
     /// assert_eq!(spawn_event.object, Object::Cube);
     /// assert_eq!(spawn_event.data, ());
     /// ```
@@ -137,11 +137,7 @@ where
     ///
     /// fn spawn_with_delay(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
     ///     spawn_events.send(
-    ///         SpawnEvent::new(
-    ///             Object::Cube,
-    ///             Transform::from_xyz(4.0, 5.0, 6.0),
-    ///         )
-    ///         .delay_frames(1),
+    ///         SpawnEvent::with_data(Object::Cube, Transform::from_xyz(4.0, 5.0, 6.0)).delay_frames(1)
     ///     );
     /// }
     pub fn delay_frames(mut self, delay: usize) -> SpawnEvent<T, D> {
@@ -162,7 +158,7 @@ where
     ///     Cube
     /// }
     ///
-    /// let spawn_event = SpawnEvent::new(Object::Cube).delay_seconds(1.0);
+    /// let spawn_event: SpawnEvent<Object> = SpawnEvent::new(Object::Cube).delay_seconds(1.0);
     /// assert_eq!(spawn_event.object, Object::Cube);
     /// assert!(matches!(spawn_event.delay, Delay::Seconds(_)));
     /// ```
@@ -182,7 +178,7 @@ where
     ///    Cube
     /// }
     ///
-    /// let spawn_event = SpawnEvent::new(Object::Cube).data(Name::new("Dirt Block");
+    /// let spawn_event: SpawnEvent<Object, Name> = SpawnEvent::new(Object::Cube).data(Name::new("Dirt Block"));
     /// assert_eq!(spawn_event.object, Object::Cube);
     /// assert_eq!(spawn_event.data, Name::new("Dirt Block"));
     /// ```

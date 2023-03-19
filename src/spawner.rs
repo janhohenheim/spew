@@ -28,7 +28,7 @@ where
 {
     fn add_to_app(self, app: &mut App) {
         let (object, mut spawn_function) = self;
-        let system = move |mut world: &mut World| {
+        let system = move |world: &mut World| {
             let mut events = world
                 .get_resource_mut::<Events<ReadySpawnEvent<T, F::In>>>()
                 .unwrap();
@@ -48,9 +48,9 @@ where
             }
 
             for event in handled_events {
-                let mut system_state: SystemState<F::Param> = SystemState::new(&mut world);
+                let mut system_state: SystemState<F::Param> = SystemState::new(world);
                 let user_data = event.data;
-                let param = system_state.get_mut(&mut world);
+                let param = system_state.get_mut(world);
                 spawn_function.run(user_data, param);
             }
         };
