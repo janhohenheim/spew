@@ -1,5 +1,5 @@
-use crate::events::ReadySpawnEvent;
-use crate::plugin::DelayerSystemSet;
+use crate::events::{delay_spawn_events, ReadySpawnEvent};
+use crate::plugin::SpewSystemSet;
 use bevy::ecs::system::SystemState;
 use bevy::prelude::*;
 use bevy::utils::all_tuples;
@@ -54,7 +54,11 @@ where
                 spawn_function.run(user_data, param);
             }
         };
-        app.add_system(system.after(DelayerSystemSet));
+        app.add_system(
+            system
+                .after(delay_spawn_events::<T, F::In>)
+                .in_set(SpewSystemSet),
+        );
     }
 }
 

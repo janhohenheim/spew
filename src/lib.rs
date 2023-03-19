@@ -11,7 +11,6 @@ mod spawner;
 pub mod prelude {
     pub use crate::{
         events::{Delay, SpawnEvent},
-        plugin::SpewApp,
-        plugin::SpewPlugin,
+        plugin::{SpewApp, SpewPlugin, SpewSystemSet},
     };
 }
