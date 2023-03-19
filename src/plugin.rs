@@ -2,6 +2,7 @@ use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
 use crate::spawner::{Spawner, Spawners};
 use bevy::prelude::*;
 
+#[allow(clippy::needless_doctest_main)]
 /// A plugin that enables spawning objects of type `T` while providing data of type `D`.
 /// Using multiple combinations of `T` and `D` requires adding multiple instances of this plugin to an [`App`].
 /// If your spawn systems don't require any data, simply pass `()` as the `D` type.
@@ -17,8 +18,8 @@ use bevy::prelude::*;
 ///
 /// fn main() {
 ///    App::new()
-///         .add_plugins(DefaultPlugins)
-///         .add_plugin(SpewPlugin::<Object, Transform>::default())
+///      .add_plugins(DefaultPlugins)
+///      .add_plugin(SpewPlugin::<Object, Transform>::default())
 /// }
 pub struct SpewPlugin<T, D>
 where

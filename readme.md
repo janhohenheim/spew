@@ -104,6 +104,12 @@ fn setup_map(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
 You can read through the [docs](https://docs.rs/spew) or peruse the [examples](https://github.com/janhohenheim/spew/examples) for more use cases.
 Other cool stuff you can do is delay the spawning by a certain amount of frames or time or organize your spawn lists into multiple enums.
 
+## Compatibility
+| bevy | spew |
+|------|------|
+| 0.10 | 0.1  |
+
+
 ## Motivation
 
 Bevy's `Commands` API allows you to spawn new entities with arbitrary components:

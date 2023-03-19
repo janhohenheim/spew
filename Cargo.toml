@@ -1,9 +1,14 @@
 [package]
 name = "spew"
 version = "0.1.0"
+authors = ["Jan Hohenheim <jan@hohenheim.ch>"]
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+exclude = ["assets", "docs"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/janhohenheim/spew"
+description = "A simple helper for spawning objects in Bevy."
+keywords = ["bevy", "spawning", "spawn"]
+categories = ["game-development"]
 
 [dependencies.bevy]
 version = "0.10"
@@ -19,9 +24,6 @@ features = [
     "bevy_render",
     "bevy_core_pipeline",
     "bevy_scene",
-    #"bevy_pbr",
     "bevy_sprite",
     "bevy_ui",
-    #"bevy_gltf",
-    #"png"
 ]

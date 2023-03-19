@@ -31,15 +31,26 @@ fn spawn_with_delay(mut spawn_events: EventWriter<DelayedSpawnEvent<Object, Tran
             object: Object::Cube,
             data: Transform::from_xyz(4.0, 5.0, 6.0),
         }
-        .with_delay(1),
+        .delay_frames(1),
+    );
+
+    spawn_events.send(
+        SpawnEvent {
+            object: Object::Cube,
+            data: Transform::from_xyz(10.0, 11.0, 12.0),
+        }
+        .delay_seconds(0.5),
     );
 }
 
 fn spawn_cube(world: &mut World, transform: Transform) {
     let frame_count = world.get_resource::<FrameCount>().unwrap();
+    let time = world.get_resource::<Time>().unwrap();
     info!(
-        "Spawning cube at {} on frame {}",
-        transform.translation, frame_count.0
+        "Spawning cube at {} on frame {} at time {}",
+        transform.translation,
+        frame_count.0,
+        time.elapsed_seconds()
     );
     world.spawn((Name::new("Cube"), transform));
 }
