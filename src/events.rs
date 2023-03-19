@@ -76,7 +76,7 @@ where
     T: Eq + Send + Sync + 'static,
     D: Send + Sync + 'static,
 {
-    /// Create a new spawn event.
+    /// Create a new spawn event with user data and no delay.
     pub fn new(object: T, data: D) -> Self {
         Self {
             object,
@@ -88,8 +88,7 @@ where
     /// Delay the spawning of the object by a number of frames.
     /// Note that objects are spawned a frame after they are spawned per default, so a delay of 1 means that the object will be spawned 2 frames after the event is sent.
     ///
-    /// Setting a frame delay of 0 is the same as spawning it without delay.
-    /// To be used in tandem with an [`EventWriter`] of type [`DelayedSpawnEvent`].
+    /// Setting a frame delay of 0 is the same as spawning it without delay, which is the default behavior.
     ///
     /// # Example
     /// ```rust
@@ -101,7 +100,7 @@ where
     ///     Cube
     /// }
     ///
-    /// fn spawn_with_delay(mut spawn_events: EventWriter<DelayedSpawnEvent<Object, Transform>>) {
+    /// fn spawn_with_delay(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
     ///     spawn_events.send(
     ///         SpawnEvent::new(
     ///             Object::Cube,
@@ -118,8 +117,6 @@ where
     /// Delay the spawning of the object by a number of seconds.
     /// Since objects are spawned a frame after they are spawned per default, a delay of 0.0 means that the object will be spawned 1 frame after the event is sent.
     ///
-    /// To be used in tandem with an [`EventWriter`] of type [`DelayedSpawnEvent`].
-    ///
     /// # Example
     /// ```rust
     /// use spew::prelude::*;
@@ -130,7 +127,7 @@ where
     ///     Cube
     /// }
     ///
-    /// fn spawn_with_delay(mut spawn_events: EventWriter<DelayedSpawnEvent<Object, Transform>>) {
+    /// fn spawn_with_delay(mut spawn_events: EventWriter<SpawnEvent<Object, Transform>>) {
     ///     spawn_events.send(
     ///         SpawnEvent::new(
     ///             Object::Cube,
@@ -145,7 +142,7 @@ where
     }
 }
 
-/// A delay for spawning an object.
+/// A delay for spawning an object. The default is no delay.
 pub enum Delay {
     /// Wait for a number of frames longer than usual.
     Frames(usize),
