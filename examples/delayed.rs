@@ -35,7 +35,7 @@ fn spawn_with_delay(mut spawn_events: EventWriter<DelayedSpawnEvent<Object, Tran
     );
 }
 
-fn spawn_cube(transform: Transform, world: &mut World) {
+fn spawn_cube(world: &mut World, transform: Transform) {
     let frame_count = world.get_resource::<FrameCount>().unwrap();
     info!(
         "Spawning cube at {} on frame {}",

@@ -36,17 +36,17 @@ fn spawn_multiple_objects(mut spawn_events: EventWriter<SpawnEvent<Object, Trans
     });
 }
 
-fn spawn_cube(transform: Transform, world: &mut World) {
+fn spawn_cube(world: &mut World, transform: Transform) {
     info!("Spawning cube at {}", transform.translation);
     world.spawn((Name::new("Cube"), transform));
 }
 
-fn spawn_triangle(transform: Transform, world: &mut World) {
+fn spawn_triangle(world: &mut World, transform: Transform) {
     info!("Spawning triangle at {}", transform.translation);
     world.spawn((Name::new("Triangle"), transform));
 }
 
-fn spawn_sphere(transform: Transform, world: &mut World) {
+fn spawn_sphere(world: &mut World, transform: Transform) {
     info!("Spawning sphere at {}", transform.translation);
     world.spawn((Name::new("Sphere"), transform));
 }

@@ -47,12 +47,12 @@ fn spawn_something_with_tuple(
     });
 }
 
-fn spawn_with_struct(data: SpawnData, world: &mut World) {
+fn spawn_with_struct(world: &mut World, data: SpawnData) {
     info!("Spawning {} at {}", data.name, data.transform.translation);
     world.spawn((Name::new("Cube"), data.transform));
 }
 
-fn spawn_with_tuple((transform, name): (Transform, String), world: &mut World) {
+fn spawn_with_tuple(world: &mut World, (transform, name): (Transform, String)) {
     info!("Spawning {} at {}", name, transform.translation);
     world.spawn((Name::new("Cube"), transform));
 }

@@ -14,7 +14,7 @@ pub trait Spawner<D> {
 impl<T, F, D> Spawner<D> for (T, F)
 where
     T: Debug + Eq + Send + Sync + 'static,
-    F: Fn(D, &mut World) + 'static + Send + Sync,
+    F: Fn(&mut World, D) + 'static + Send + Sync,
     D: Send + Sync + 'static,
 {
     fn add_to_app(self, app: &mut App) {
@@ -39,7 +39,7 @@ where
             }
 
             for event in handled_events {
-                spawn_function(event.data, world);
+                spawn_function(world, event.data);
             }
         };
         app.add_system(system);

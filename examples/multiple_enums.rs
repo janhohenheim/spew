@@ -63,32 +63,32 @@ fn spawn_furniture(mut spawn_events: EventWriter<SpawnEvent<Furniture, Transform
     });
 }
 
-fn spawn_human(transform: Transform, world: &mut World) {
+fn spawn_human(world: &mut World, transform: Transform) {
     info!("Spawning human at {}", transform.translation);
     world.spawn((Name::new("Human"), transform));
 }
 
-fn spawn_cow(transform: Transform, world: &mut World) {
+fn spawn_cow(world: &mut World, transform: Transform) {
     info!("Spawning cow at {}", transform.translation);
     world.spawn((Name::new("Cow"), transform));
 }
 
-fn spawn_zombie(transform: Transform, world: &mut World) {
+fn spawn_zombie(world: &mut World, transform: Transform) {
     info!("Spawning zombie at {}", transform.translation);
     world.spawn((Name::new("Zombie"), transform));
 }
 
-fn spawn_chair(transform: Transform, world: &mut World) {
+fn spawn_chair(world: &mut World, transform: Transform) {
     info!("Spawning chair at {}", transform.translation);
     world.spawn((Name::new("Chair"), transform));
 }
 
-fn spawn_table(transform: Transform, world: &mut World) {
+fn spawn_table(world: &mut World, transform: Transform) {
     info!("Spawning table at {}", transform.translation);
     world.spawn((Name::new("Table"), transform));
 }
 
-fn spawn_bed(transform: Transform, world: &mut World) {
+fn spawn_bed(world: &mut World, transform: Transform) {
     info!("Spawning bed at {}", transform.translation);
     world.spawn((Name::new("Bed"), transform));
 }
