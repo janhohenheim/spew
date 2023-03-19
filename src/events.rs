@@ -57,6 +57,7 @@ where
 /// A trait that allows creating a [`SpawnEvent`] without user-provided data.
 pub trait NewSpawnEventWithoutData<T> {
     /// Create a new spawn event
+    #[allow(clippy::new-ret-no-self)]
     fn new(object: T) -> SpawnEvent<T, ()>
     where
         T: Eq + Send + Sync + 'static;
