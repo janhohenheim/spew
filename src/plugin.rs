@@ -2,6 +2,24 @@ use crate::events::{delay_spawn_events, DelayedSpawnEvent, SpawnEvent};
 use crate::spawner::{Spawner, Spawners};
 use bevy::prelude::*;
 
+/// A plugin that enables spawning objects of type `T` while providing data of type `D`.
+/// Using multiple combinations of `T` and `D` requires adding multiple instances of this plugin to an [`App`].
+/// If your spawn systems don't require any data, simply pass `()` as the `D` type.
+///
+/// # Example
+/// ```rust
+/// use spew::prelude::*;
+/// use bevy::prelude::*;
+///
+/// enum Object {
+///    Cube
+/// }
+///
+/// fn main() {
+///    App::new()
+///         .add_plugins(DefaultPlugins)
+///         .add_plugin(SpewPlugin::<Object, Transform>::default())
+/// }
 pub struct SpewPlugin<T, D>
 where
     T: Eq + Send + Sync + 'static,
@@ -40,17 +58,96 @@ where
     }
 }
 
+/// A trait that allows adding spawners to an [`App`].
+/// Spawners are tuples of an object and a spawning function, e.g. `(Object::Cube, spawn_cube)`. A spawning function has the signature `fn(&mut Commands, D)`, where D is any user provided data.
+///
+/// The spawner's combination of object enum and user data must have been registered with an own [`SpewPlugin`] beforehand.
 pub trait SpewApp {
-    fn add_spawner<D, T: Spawner<D>>(&mut self, spawner: T) -> &mut App;
-    fn add_spawners<D, T: Spawners<D>>(&mut self, spawners: T) -> &mut App;
+    /// Add a single spawner to the app.
+    ///
+    /// # Example
+    /// ```rust
+    /// use spew::prelude::*;
+    /// use bevy::prelude::*;
+    ///
+    /// enum Object {
+    ///   Cube
+    /// }
+    ///
+    /// fn main() {
+    ///     App::new()
+    ///         .add_plugins(DefaultPlugins)
+    ///         .add_plugin(SpewPlugin::<Object, Transform>::default())
+    ///         .add_spawner((Object::Cube, spawn_cube))
+    ///         .run();
+    /// }
+    ///
+    /// fn spawn_cube(world: &mut World, transform: Transform) {
+    ///    info!("Spawning cube at {}", transform.translation);
+    ///    world.spawn((Name::new("Cube"), transform));
+    /// }
+    /// ```
+    fn add_spawner<T, D>(&mut self, spawner: T) -> &mut App
+    where
+        T: Spawner<D>;
+
+    /// Add multiple spawners to the app by providing them in a tuple.
+    ///
+    /// # Example
+    /// ```rust
+    /// use spew::prelude::*;
+    /// use bevy::prelude::*;
+    ///
+    /// enum Object {
+    ///   Cube,
+    ///   Triangle,
+    ///   Sphere,
+    /// }
+    ///
+    /// fn main() {
+    ///     App::new()
+    ///         .add_plugins(DefaultPlugins)
+    ///         .add_plugin(SpewPlugin::<Object, Transform>::default())
+    ///         .add_spawners((
+    ///             (Object::Cube, spawn_cube),
+    ///             (Object::Triangle, spawn_triangle),
+    ///             (Object::Sphere, spawn_sphere),
+    ///         ))
+    ///         .run();
+    /// }
+    ///
+    /// fn spawn_cube(world: &mut World, transform: Transform) {
+    ///    info!("Spawning cube at {}", transform.translation);
+    ///    world.spawn((Name::new("Cube"), transform));
+    /// }
+    ///
+    /// fn spawn_triangle(world: &mut World, transform: Transform) {
+    ///    info!("Spawning triangle at {}", transform.translation);
+    ///    world.spawn((Name::new("Cube"), transform));
+    /// }
+    ///
+    /// fn spawn_sphere(world: &mut World, transform: Transform) {
+    ///    info!("Spawning sphere at {}", transform.translation);
+    ///    world.spawn((Name::new("Cube"), transform));
+    /// }
+    /// ```
+    fn add_spawners<T, D>(&mut self, spawners: T) -> &mut App
+    where
+        T: Spawners<D>;
 }
 
 impl SpewApp for App {
-    fn add_spawner<D, T: Spawner<D>>(&mut self, spawner: T) -> &mut App {
+    fn add_spawner<T, D>(&mut self, spawner: T) -> &mut App
+    where
+        T: Spawner<D>,
+    {
         spawner.add_to_app(self);
         self
     }
-    fn add_spawners<D, T: Spawners<D>>(&mut self, spawners: T) -> &mut App {
+    fn add_spawners<T, D>(&mut self, spawners: T) -> &mut App
+    where
+        T: Spawners<D>,
+    {
         spawners.add_to_app(self);
         self
     }

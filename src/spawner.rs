@@ -3,11 +3,17 @@ use bevy::prelude::*;
 use bevy::utils::all_tuples;
 use std::fmt::Debug;
 
+/// Abstraction over a tuple of [`Spawner`]s.
+/// See [`SpewApp::add_spawners`](crate::prelude::SpewApp::add_spawners) for more information.
 pub trait Spawners<D> {
+    /// Add all spawners to the app. Called internally.
     fn add_to_app(self, app: &mut App);
 }
 
+/// Abstraction over a tuple of an enum variant and a spawning function.
+/// See [`SpewApp::add_spawners`](crate::prelude::SpewApp::add_spawners) for more information.
 pub trait Spawner<D> {
+    /// Add the spawner to the app. Called internally.
     fn add_to_app(self, app: &mut App);
 }
 
