@@ -121,9 +121,7 @@ where
     }
 
     /// Delay the spawning of the object by a number of frames.
-    /// Note that objects are spawned a frame after they are spawned per default, so a delay of 1 means that the object will be spawned 2 frames after the event is sent.
-    ///
-    /// Setting a frame delay of 0 is the same as spawning it without delay, which is the default behavior.
+    /// Setting a frame delay of 0 means spawning in this frame, which is the default behavior.
     ///
     /// # Example
     /// ```rust
@@ -146,7 +144,7 @@ where
     }
 
     /// Delay the spawning of the object by a number of seconds.
-    /// Since objects are spawned a frame after they are spawned per default, a delay of 0.0 means that the object will be spawned 1 frame after the event is sent.
+    /// A delay of 0.0 means that the object will be spawned in this frame.
     ///
     /// # Example
     /// ```rust
@@ -190,7 +188,7 @@ where
 
 /// A delay for spawning an object. The default is no delay.
 pub enum Delay {
-    /// Wait for a number of frames longer than usual.
+    /// Wait for a number of frames before spawning.
     Frames(usize),
     /// Wait for a number of seconds before spawning the object.
     Seconds(f32),

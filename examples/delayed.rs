@@ -17,10 +17,10 @@ fn main() {
 }
 
 fn spawn_various_delays(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
-    // This cube will spawn 1 tick after the event is sent
+    // This cube will spawn in this frame
     spawn_events.send(SpawnEvent::new(Object::Cube));
 
-    // This cube will spawn 1 tick later than usual, so in total 2 ticks after the event is sent
+    // This cube will spawn in the next frame
     spawn_events.send(SpawnEvent::new(Object::Cube).delay_frames(1));
 
     // This cube will spawn after 0.5

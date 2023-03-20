@@ -52,6 +52,7 @@ where
                 let user_data = event.data;
                 let param = system_state.get_mut(world);
                 spawn_function.run(user_data, param);
+                system_state.apply(world);
             }
         };
         app.add_system(
