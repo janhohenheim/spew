@@ -29,6 +29,7 @@ fn spawn_player(mut commands: Commands) {
 fn setup(mut spawn_events: EventWriter<SpawnEvent<Object>>) {
     spawn_events.send(SpawnEvent::new(Object::Player));
 }
+
 fn query_player(player: Query<&Player>) {
     let player = player.single();
     info!("Found a player named {}", player.name);
