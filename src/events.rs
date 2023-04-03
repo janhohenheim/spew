@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use std::fmt::{Debug, Formatter};
 
 /// An event that will spawn an object in the world.
 /// This is the most common way to interact with the plugin.
@@ -252,4 +253,47 @@ where
             data: event.data,
         }
     }
+}
+
+impl<T, D> Clone for ReadySpawnEvent<T, D>
+where
+    T: Eq + Send + Sync + Clone + 'static,
+    D: Send + Sync + Clone + 'static,
+{
+    fn clone(&self) -> Self {
+        Self {
+            object: self.object.clone(),
+            data: self.data.clone(),
+        }
+    }
+}
+
+impl<T, D> Debug for ReadySpawnEvent<T, D>
+where
+    T: Eq + Send + Sync + Debug + 'static,
+    D: Send + Sync + Debug + 'static,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ReadySpawnEvent")
+            .field("object", &self.object)
+            .field("data", &self.data)
+            .finish()
+    }
+}
+
+impl<T, D> PartialEq for ReadySpawnEvent<T, D>
+where
+    T: Eq + Send + Sync + PartialEq + 'static,
+    D: Send + Sync + PartialEq + 'static,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.object == other.object && self.data == other.data
+    }
+}
+
+impl<T, D> Eq for ReadySpawnEvent<T, D>
+where
+    T: Eq + Send + Sync + Eq + 'static,
+    D: Send + Sync + Eq + 'static,
+{
 }
