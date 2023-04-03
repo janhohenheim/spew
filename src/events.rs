@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use std::fmt::{Debug, Formatter};
+use std::hash::{Hash, Hasher};
 
 /// An event that will spawn an object in the world.
 /// This is the most common way to interact with the plugin.
@@ -296,4 +297,15 @@ where
     T: Eq + Send + Sync + Eq + 'static,
     D: Send + Sync + Eq + 'static,
 {
+}
+
+impl<T, D> Hash for ReadySpawnEvent<T, D>
+where
+    T: Eq + Send + Sync + Hash + 'static,
+    D: Send + Sync + Hash + 'static,
+{
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.object.hash(state);
+        self.data.hash(state);
+    }
 }
