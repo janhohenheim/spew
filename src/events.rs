@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use std::fmt::{Debug, Formatter};
-use std::hash::{Hash, Hasher};
+
+mod blanket_impls;
 
 /// An event that will spawn an object in the world.
 /// This is the most common way to interact with the plugin.
@@ -50,16 +50,6 @@ where
 impl Default for Delay {
     fn default() -> Self {
         Self::Frames(0)
-    }
-}
-
-impl<T, D> Default for SpawnEvent<T, D>
-where
-    T: Eq + Send + Sync + Default + 'static,
-    D: Send + Sync + Default + 'static,
-{
-    fn default() -> Self {
-        Self::new(default())
     }
 }
 
@@ -189,6 +179,7 @@ where
 }
 
 /// A delay for spawning an object. The default is no delay.
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Delay {
     /// Wait for a number of frames before spawning.
     Frames(usize),
@@ -253,59 +244,5 @@ where
             object: event.object,
             data: event.data,
         }
-    }
-}
-
-impl<T, D> Clone for ReadySpawnEvent<T, D>
-where
-    T: Eq + Send + Sync + Clone + 'static,
-    D: Send + Sync + Clone + 'static,
-{
-    fn clone(&self) -> Self {
-        Self {
-            object: self.object.clone(),
-            data: self.data.clone(),
-        }
-    }
-}
-
-impl<T, D> Debug for ReadySpawnEvent<T, D>
-where
-    T: Eq + Send + Sync + Debug + 'static,
-    D: Send + Sync + Debug + 'static,
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ReadySpawnEvent")
-            .field("object", &self.object)
-            .field("data", &self.data)
-            .finish()
-    }
-}
-
-impl<T, D> PartialEq for ReadySpawnEvent<T, D>
-where
-    T: Eq + Send + Sync + PartialEq + 'static,
-    D: Send + Sync + PartialEq + 'static,
-{
-    fn eq(&self, other: &Self) -> bool {
-        self.object == other.object && self.data == other.data
-    }
-}
-
-impl<T, D> Eq for ReadySpawnEvent<T, D>
-where
-    T: Eq + Send + Sync + Eq + 'static,
-    D: Send + Sync + Eq + 'static,
-{
-}
-
-impl<T, D> Hash for ReadySpawnEvent<T, D>
-where
-    T: Eq + Send + Sync + Hash + 'static,
-    D: Send + Sync + Hash + 'static,
-{
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.object.hash(state);
-        self.data.hash(state);
     }
 }
