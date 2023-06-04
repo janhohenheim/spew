@@ -133,12 +133,12 @@ pub trait SpewApp {
     ///
     /// fn spawn_triangle(In(transform): In<Transform>, mut commands: Commands) {
     ///    info!("Spawning triangle at {}", transform.translation);
-    ///    commands.spawn((Name::new("Cube"), transform));
+    ///    commands.spawn((Name::new("Triangle"), transform));
     /// }
     ///
     /// fn spawn_sphere(In(transform): In<Transform>, mut commands: Commands) {
     ///    info!("Spawning sphere at {}", transform.translation);
-    ///    commands.spawn((Name::new("Cube"), transform));
+    ///    commands.spawn((Name::new("Sphere"), transform));
     /// }
     /// ```
     fn add_spawners<T, D>(&mut self, spawners: T) -> &mut App
