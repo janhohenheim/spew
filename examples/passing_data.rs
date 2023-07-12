@@ -9,9 +9,9 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object, Transform>::default())
+        .add_plugins(SpewPlugin::<Object, Transform>::default())
         .add_spawners(((Object::Cube, spawn_cube_with_transform),))
-        .add_system(spawn_something_with_transform.on_startup())
+        .add_systems(Startup, spawn_something_with_transform)
         .run();
 }
 

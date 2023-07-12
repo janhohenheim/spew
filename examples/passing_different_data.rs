@@ -9,13 +9,13 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object, Transform>::default())
-        .add_plugin(SpewPlugin::<Object, String>::default())
+        .add_plugins(SpewPlugin::<Object, Transform>::default())
+        .add_plugins(SpewPlugin::<Object, String>::default())
         .add_spawners((
             (Object::Cube, spawn_cube_with_transform),
             (Object::Cube, spawn_cube_with_name),
         ))
-        .add_system(spawn_something_with_transform.on_startup())
+        .add_systems(Startup, spawn_something_with_transform)
         .run();
 }
 

@@ -9,9 +9,10 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object>::default())
+        .add_plugins(SpewPlugin::<Object>::default())
         .add_spawner((Object::Player, spawn_player))
-        .add_systems((setup.on_startup(), query_player.after(SpewSystemSet)))
+        .add_systems(Startup, setup)
+        .add_systems(Update, query_player.after(SpewSystemSet))
         .run();
 }
 

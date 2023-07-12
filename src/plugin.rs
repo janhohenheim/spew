@@ -20,7 +20,7 @@ use bevy::prelude::*;
 /// fn main() {
 ///    App::new()
 ///      .add_plugins(DefaultPlugins)
-///      .add_plugin(SpewPlugin::<Object, Transform>::default())
+///      .add_plugins(SpewPlugin::<Object, Transform>::default())
 ///      .run();
 /// }
 pub struct SpewPlugin<T, D = ()>
@@ -53,7 +53,7 @@ where
     fn build(&self, app: &mut App) {
         app.add_event::<SpawnEvent<T, D>>()
             .add_event::<ReadySpawnEvent<T, D>>()
-            .add_system(delay_spawn_events::<T, D>.in_set(SpewSystemSet));
+            .add_systems(Update, delay_spawn_events::<T, D>.in_set(SpewSystemSet));
     }
 
     fn is_unique(&self) -> bool {
@@ -86,7 +86,7 @@ pub trait SpewApp {
     /// fn main() {
     ///     App::new()
     ///         .add_plugins(DefaultPlugins)
-    ///         .add_plugin(SpewPlugin::<Object, Transform>::default())
+    ///         .add_plugins(SpewPlugin::<Object, Transform>::default())
     ///         .add_spawner((Object::Cube, spawn_cube))
     ///         .run();
     /// }
@@ -117,7 +117,7 @@ pub trait SpewApp {
     /// fn main() {
     ///     App::new()
     ///         .add_plugins(DefaultPlugins)
-    ///         .add_plugin(SpewPlugin::<Object, Transform>::default())
+    ///         .add_plugins(SpewPlugin::<Object, Transform>::default())
     ///         .add_spawners((
     ///             (Object::Cube, spawn_cube),
     ///             (Object::Triangle, spawn_triangle),

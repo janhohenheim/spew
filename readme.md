@@ -28,7 +28,7 @@ use bevy::prelude::*;
 fn main() {
     App::new()
     // ...
-        .add_plugin(SpewPlugin::<Objects, Transform>::default()) // <--- Add the plugin
+        .add_plugins(SpewPlugin::<Objects, Transform>::default()) // <--- Add the plugin
     // ...
         .run();
 }
@@ -81,7 +81,7 @@ use bevy::prelude::*;
 fn main() {
     App::new()
     // ...
-        .add_system(setup_map.on_startup())
+        .add_systems(Startup, setup_map)
     // ...
         .run();
 }

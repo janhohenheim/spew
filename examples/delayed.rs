@@ -10,9 +10,9 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object>::default())
+        .add_plugins(SpewPlugin::<Object>::default())
         .add_spawner((Object::Cube, spawn_cube))
-        .add_system(spawn_various_delays.on_startup())
+        .add_systems(Startup, spawn_various_delays)
         .run();
 }
 

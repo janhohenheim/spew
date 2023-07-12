@@ -11,13 +11,13 @@ enum Object {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Object>::default())
+        .add_plugins(SpewPlugin::<Object>::default())
         .add_spawners((
             (Object::Cube, spawn_cube),
             (Object::Triangle, spawn_triangle),
             (Object::Sphere, spawn_sphere),
         ))
-        .add_system(spawn_multiple_objects.on_startup())
+        .add_systems(Startup, spawn_multiple_objects)
         .run();
 }
 

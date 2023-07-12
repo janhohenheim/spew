@@ -18,8 +18,8 @@ enum Furniture {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(SpewPlugin::<Creature>::default())
-        .add_plugin(SpewPlugin::<Furniture>::default())
+        .add_plugins(SpewPlugin::<Creature>::default())
+        .add_plugins(SpewPlugin::<Furniture>::default())
         // This can also be done with two separate calls to add_spawners, if you prefer
         .add_spawners((
             (Creature::Human, spawn_human),
@@ -29,7 +29,7 @@ fn main() {
             (Furniture::Table, spawn_table),
             (Furniture::Bed, spawn_bed),
         ))
-        .add_systems((spawn_creatures, spawn_furniture).on_startup())
+        .add_systems(Startup, (spawn_creatures, spawn_furniture))
         .run();
 }
 

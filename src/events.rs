@@ -33,6 +33,7 @@ use std::fmt::{Debug, Formatter};
 ///       Transform::from_xyz(1.0, 2.0, 3.0),
 ///   ).delay_frames(10));
 /// }
+#[derive(Event)]
 pub struct SpawnEvent<T, D = ()>
 where
     T: Eq + Send + Sync + 'static,
@@ -233,6 +234,7 @@ pub(crate) fn delay_spawn_events<T, D>(
     }
 }
 
+#[derive(Event)]
 pub(crate) struct ReadySpawnEvent<T, D>
 where
     T: Eq + Send + Sync + 'static,

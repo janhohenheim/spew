@@ -55,7 +55,8 @@ where
                 system_state.apply(world);
             }
         };
-        app.add_system(
+        app.add_systems(
+            Update,
             system
                 .after(delay_spawn_events::<T, F::In>)
                 .in_set(SpewSystemSet),
