@@ -10,7 +10,7 @@ where
         Self {
             object: self.object.clone(),
             data: self.data.clone(),
-            delay: self.delay.clone(),
+            delay: self.delay,
         }
     }
 }
