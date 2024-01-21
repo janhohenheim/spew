@@ -106,10 +106,11 @@ You can read through the [docs](https://docs.rs/spew) or peruse the [examples](h
 Other cool stuff you can do is delay the spawning by a certain amount of frames or time or organize your spawn lists into multiple enums.
 
 ## Compatibility
-| bevy | spew  |
-|------|-------|
-| 0.11 | 0.3 |
-| 0.10 | 0.2 |
+| bevy | spew |
+|------|------|
+| 0.12 | 0.4  |
+| 0.11 | 0.3  |
+| 0.10 | 0.2  |
 
 
 ## Motivation
