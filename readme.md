@@ -108,6 +108,7 @@ Other cool stuff you can do is delay the spawning by a certain amount of frames 
 ## Compatibility
 | bevy | spew |
 |------|------|
+| 0.13 | 0.5  |
 | 0.12 | 0.4  |
 | 0.11 | 0.3  |
 | 0.10 | 0.2  |
