@@ -3,81 +3,84 @@ name: CI
 on:
   pull_request:
   push:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+  # Sparse cargo registry for faster updates
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
 
 jobs:
-  test-native:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-build-nightly-${{ hashFiles('**/Cargo.toml') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-      - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
-        if: runner.os == 'linux'
-      - name: Install zld
-        run: brew install michaeleisel/zld/zld
-        if: runner.os == 'macos'
-      - name: Install llvm tools
-        run: cargo install -f cargo-binutils && rustup component add llvm-tools-preview
-        if : runner.os == 'windows'
-      - name: Build & run tests for native
-        run: cargo test
-  test-native-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ubuntu-latest-cargo-build-nightly-${{ hashFiles('**/Cargo.toml') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-      - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
-      - name: Run doc tests
-        run: cargo test --doc
   lint:
     runs-on: ubuntu-latest
+    env:
+      # Handle cargo check and cargo clippy warnings as errors
+      RUSTFLAGS: "-D warnings"
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ubuntu-latest-cargo-build-nightly-${{ hashFiles('**/Cargo.toml') }}
-      - uses: actions-rs/toolchain@v1
+          submodules: 'true'
+      - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: nightly
-          components: rustfmt, clippy
-          override: true
+          toolchain: stable
+          components: clippy
+      - name: Cache Cargo build files
+        uses: Leafwing-Studios/cargo-cache@v1
       - name: Install alsa and udev
         run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
-      - name: Check format
-        run: cargo fmt --all -- --check
-      - name: Run clippy
-        run: cargo clippy --all-targets --examples -- --deny warnings
+      - name: Run cargo clippy
+        run: cargo clippy --tests --examples
+
+  format:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-D warnings"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: Cache Cargo build files
+        uses: Leafwing-Studios/cargo-cache@v1
+      - name: Run cargo fmt
+        run: cargo fmt --check --all
+
+  doc:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-D warnings"
+      RUSTDOCFLAGS: '--deny warnings'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - name: Cache Cargo build files
+        uses: Leafwing-Studios/cargo-cache@v1
+      - name: Install alsa and udev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
+      - name: Run cargo doc
+        run: cargo doc --no-deps --all-features
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - name: Cache Cargo build files
+        uses: Leafwing-Studios/cargo-cache@v1
+      - name: Install alsa and udev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
+      - name: Run cargo test
+        run: cargo test --all-features
+      - name: Run doc tests
+        run: cargo test --doc
