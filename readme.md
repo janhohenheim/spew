@@ -51,7 +51,7 @@ fn main() {
         .run();
 }
 
-fn spawn_player(In(transform): In<Transform>, mut commands: Commands) { {
+fn spawn_player(In(transform): In<Transform>, mut commands: Commands) {
     commands.spawn((
         Name::new("Spiffy the Adventurer"),
         TransformBundle::from_transform(transform),

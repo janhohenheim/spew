@@ -5,7 +5,7 @@ mod blanket_impls;
 /// An event that will spawn an object in the world.
 /// This is the most common way to interact with the plugin.
 /// `T` is the type of the object to spawn, and `D` is the type of the user-provided data.
-/// Any combination of `T` and `D` used in a `SpawnEvent` must have been registered with an own [`SpewPlugin`] beforehand.
+/// Any combination of `T` and `D` used in a `SpawnEvent` must have been registered with an own [`SpewPlugin`](crate::prelude::SpewPlugin) beforehand.
 ///
 /// # Example
 /// ```rust
