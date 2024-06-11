@@ -23,6 +23,7 @@ use bevy::prelude::*;
 ///      .add_plugins(SpewPlugin::<Object, Transform>::default())
 ///      .run();
 /// }
+/// ```
 pub struct SpewPlugin<T, D = ()>
 where
     T: Eq + Send + Sync + 'static,
