@@ -1,6 +1,6 @@
 [package]
 name = "spew"
-version = "0.5.1"
+version = "0.6.0-rc"
 authors = ["Jan Hohenheim <jan@hohenheim.ch>"]
 edition = "2021"
 exclude = ["assets", "docs"]
@@ -11,11 +11,11 @@ keywords = ["bevy", "spawning", "spawn"]
 categories = ["game-development"]
 
 [dependencies.bevy]
-version = "0.13.0"
+version = "0.14.0-rc.2"
 default-features = false
 
 [dev-dependencies.bevy]
-version = "0.13.0"
+version = "0.14.0-rc.2"
 default-features = false
 features = [
     "bevy_asset",
@@ -26,4 +26,7 @@ features = [
     "bevy_scene",
     "bevy_sprite",
     "bevy_ui",
+    "ktx2",
+    "zstd",
+    "bevy_pbr",
 ]
