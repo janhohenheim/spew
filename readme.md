@@ -35,6 +35,7 @@ fn main() {
 ```
 
 Now, we are ready to register our spawn functions. Each variant of the `enum` will be associated with its own spawn function that takes in a `&mut World` and the user provided data:
+
 ```rust,ignore
 use spew::prelude::*;
 use bevy::prelude::*;
@@ -74,6 +75,7 @@ fn spawn_coin(In(transform): In<Transform>, mut commands: Commands) {
 ```
 
 Finally, we can set our spawn functions to work by sending a `SpawnEvent`:
+
 ```rust,ignore
 use spew::prelude::*;
 use bevy::prelude::*;
@@ -106,18 +108,19 @@ You can read through the [docs](https://docs.rs/spew) or peruse the [examples](h
 Other cool stuff you can do is delay the spawning by a certain amount of frames or time or organize your spawn lists into multiple enums.
 
 ## Compatibility
+
 | bevy        | spew     |
 |-------------|----------|
-| 0.14.0-rc.2 | 0.6.0-rc |
+| 0.14        | 0.6      |
 | 0.13        | 0.5      |
 | 0.12        | 0.4      |
 | 0.11        | 0.3      |
 | 0.10        | 0.2      |
 
-
 ## Motivation
 
 Bevy's `Commands` API allows you to spawn new entities with arbitrary components:
+
 ```rust
 use bevy::prelude::*;
 
@@ -128,7 +131,9 @@ fn spawn_player(commands: &mut Commands) {
     ));
 }
 ```
+
 This works great! We can spawn more complex objects by just adding more components like assets:
+
 ```rust
 use std::f32::consts::TAU;
 use bevy::prelude::*;
@@ -148,8 +153,10 @@ fn spawn_bullet(commands: &mut Commands, asset_server: Res<AssetServer>) {
     ));
 }
 ```
+
 but, in a real project, we would not spawn a bullet like that. The bullet would be spawned by a weapon at a certain translation.
 We might thus encapsulate the bullet spawning like this:
+
 ```rust,ignore
 use bevy::prelude::*;
 fn handle_input(...) {
@@ -181,4 +188,4 @@ and `spawn_bullet` has a jumble of seemingly unrelated parameters that will grow
 when writing a system, but notice how here `spawn_bullet` is no longer a system but a helper function. Thus, its call will get longer and uglier over time,
 with all its parameters leaking into `handle_input`.
 
-The solution to this is to move the spawning of the bullet into an own system that is accessed indirectly by `handle_input` via events, which is just what this crate helps you with! :) 
+The solution to this is to move the spawning of the bullet into an own system that is accessed indirectly by `handle_input` via events, which is just what this crate helps you with! :)
