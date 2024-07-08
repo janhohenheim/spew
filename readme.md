@@ -1,3 +1,11 @@
+> [!IMPORTANT]  
+> Starting from Bevy 0.14, we now have [observers!](https://docs.rs/bevy/latest/bevy/ecs/prelude/struct.Observer.html).
+> Because they can do everything spew set out to do, Bevy 0.14 will be the last version supported by the plugin.
+> From now on, spew will no longer receive updates.
+> 
+> For an example of how I recommend to do spawning logic now, see [this PR](https://github.com/TheBevyFlock/bevy-template/pull/70)
+> on the new semi-official Bevy jam template. 
+
 # Spew
 
 [![crates.io](https://img.shields.io/crates/v/spew)](https://crates.io/crates/spew)
